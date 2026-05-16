@@ -316,6 +316,15 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 .cx-slider-row input[type=range]{flex:1.4}
 .cx-slider-row .csr-v{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);width:90px;text-align:right}
 
+
+.obj-solve-field{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;transition:all .15s}
+.obj-solve-field label{flex:1;font-size:12px;font-weight:600;color:var(--text2)}
+.obj-solve-field input{width:100px;font-family:var(--mono);font-size:14px;font-weight:600;text-align:right;padding:6px 9px;border:1px solid var(--border2);border-radius:6px;background:var(--bg2);color:var(--text);outline:none}
+.obj-solve-field input:focus{border-color:var(--gold)}
+.obj-solve-field input:disabled{background:var(--gold-dim);color:var(--gold);border-color:rgba(255,209,102,0.4);font-weight:800;cursor:not-allowed}
+.obj-solve-field.solving{border-color:rgba(255,209,102,0.5);background:var(--gold-dim)}
+.obj-solve-tag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);min-width:54px;text-align:right}
+
 </style>
 </head>
 <body>
@@ -985,7 +994,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
     <div class="obj-intro-icon">🎯</div>
     <div class="obj-intro-text">
       <h3>Escenario Objetivo — Ingeniería inversa del VAN</h3>
-      <p>Define el VAN que quieres alcanzar. En modo <strong>Flota fija</strong>: mueve los buses y el solver calcula el plazo mínimo necesario. En modo <strong>Plazo fijo</strong>: mueve el plazo y calcula la flota mínima. El gráfico muestra todo el espacio factible.</p>
+      <p>Define el VAN que quieres alcanzar e ingresa flota, plazo y tarifa. Elige qué variable resolver: el solver calcula <strong>flota</strong>, <strong>plazo</strong> o <strong>tarifa</strong> mínima necesaria para alcanzar el objetivo, dejando las otras dos fijas. El gráfico muestra el espacio factible.</p>
     </div>
   </div>
 
@@ -1003,53 +1012,42 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
         <div class="slider-limits"><span>$0</span><span>$500M</span></div>
       </div>
 
-      <!-- TARIFA FIJA -->
+      <!-- SOLVER: 3 campos + 3 botones -->
       <div class="obj-section">
-        <div class="obj-label">Tarifa por bus / día (fija)</div>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:6px">
-          <input type="number" id="obj-tarifa-input" value="4500" min="500" max="50000" step="500"
-            style="background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:9px 12px;color:var(--text);font-family:var(--mono);font-size:16px;font-weight:500;outline:none;width:100%">
-          <span style="font-size:12px;color:var(--text3);white-space:nowrap">$/bus/día</span>
-        </div>
-        <div id="obj-tarifa-uf-display" style="font-size:11px;color:var(--accent);font-family:var(--mono);padding:5px 8px;background:var(--accent-dim);border-radius:5px;text-align:center">0.113 UF/bus/día · (1 UF = $40.000)</div>
-      </div>
+        <div class="obj-label">Variables del solver</div>
+        <p style="font-size:11px;color:var(--text3);margin:-4px 0 12px;line-height:1.5">
+          Ingresa los valores y elige qué resolver. El solver calcula la variable seleccionada para alcanzar el VAN objetivo, dejando las otras dos fijas.
+        </p>
 
-      <!-- MODO -->
-      <div class="obj-section">
-        <div class="obj-label">Modo del solver</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+          <div class="obj-solve-field" id="fld-flota">
+            <label>Flota de buses</label>
+            <input type="number" id="obj-in-flota" value="100" min="1" max="5000" step="1">
+            <span class="obj-solve-tag" id="tag-flota"></span>
+          </div>
+          <div class="obj-solve-field" id="fld-plazo">
+            <label>Plazo (meses)</label>
+            <input type="number" id="obj-in-plazo" value="24" min="1" max="120" step="1">
+            <span class="obj-solve-tag" id="tag-plazo"></span>
+          </div>
+          <div class="obj-solve-field" id="fld-tarifa">
+            <label>Tarifa ($/bus/día)</label>
+            <input type="number" id="obj-in-tarifa" value="4500" min="100" max="50000" step="100">
+            <span class="obj-solve-tag" id="tag-tarifa"></span>
+          </div>
+        </div>
+
+        <div class="obj-label">¿Qué variable resolver?</div>
         <div class="obj-mode-row">
-          <button class="obj-mode-btn active" id="mode-flota" onclick="setObjMode('flota')">🚌 Fijo Flota<br><small>→ calcula plazo</small></button>
-          <button class="obj-mode-btn" id="mode-plazo" onclick="setObjMode('plazo')">📅 Fijo Plazo<br><small>→ calcula flota</small></button>
+          <button class="obj-mode-btn" id="mode-flota" onclick="setObjMode('flota')">🚌 Resolver<br>flota</button>
+          <button class="obj-mode-btn active" id="mode-plazo" onclick="setObjMode('plazo')">📅 Resolver<br>plazo</button>
+          <button class="obj-mode-btn" id="mode-tarifa" onclick="setObjMode('tarifa')">💲 Resolver<br>tarifa</button>
         </div>
 
-        <!-- Flota fija -->
-        <div id="ctrl-flota">
-          <div class="slider-top">
-            <span class="slider-name" style="font-size:13px;color:var(--text2)">Flota de buses</span>
-            <span class="slider-val" id="obj-flota-val">3 buses</span>
-          </div>
-          <input type="range" id="sl-obj-flota" min="1" max="2000" step="1" value="3">
-          <div class="slider-limits"><span>1 bus</span><span>2.000</span></div>
-          <div class="obj-computed">
-            <div class="obj-computed-label">Plazo mínimo requerido</div>
-            <div class="obj-computed-val" id="obj-plazo-computed" style="color:var(--gold)">—</div>
-            <div class="obj-computed-sub" id="obj-plazo-computed-sub">para alcanzar el VAN objetivo</div>
-          </div>
-        </div>
-
-        <!-- Plazo fijo -->
-        <div id="ctrl-plazo" style="display:none">
-          <div class="slider-top">
-            <span class="slider-name" style="font-size:13px;color:var(--text2)">Plazo del contrato</span>
-            <span class="slider-val" id="obj-plazo-val">24 meses</span>
-          </div>
-          <input type="range" id="sl-obj-plazo" min="1" max="72" step="1" value="24">
-          <div class="slider-limits"><span>1m</span><span>72m</span></div>
-          <div class="obj-computed">
-            <div class="obj-computed-label">Flota mínima requerida</div>
-            <div class="obj-computed-val" id="obj-flota-computed" style="color:var(--gold)">—</div>
-            <div class="obj-computed-sub" id="obj-flota-computed-sub">para alcanzar el VAN objetivo</div>
-          </div>
+        <div class="obj-computed" style="margin-top:14px">
+          <div class="obj-computed-label" id="obj-solve-label">Plazo mínimo requerido</div>
+          <div class="obj-computed-val" id="obj-solve-val" style="color:var(--gold)">—</div>
+          <div class="obj-computed-sub" id="obj-solve-sub">para alcanzar el VAN objetivo</div>
         </div>
       </div>
 
@@ -1798,15 +1796,22 @@ function runMontecarlo(){
 // ══════════════════════════════════════════════
 // OBJETIVO v2
 // ══════════════════════════════════════════════
-let objMode = 'flota';  // 'flota' o 'plazo'
+let objMode = 'plazo';  // 'flota' | 'plazo' | 'tarifa'
 let objChart = null;
 
 function setObjMode(mode) {
   objMode = mode;
-  document.getElementById('mode-flota').classList.toggle('active', mode === 'flota');
-  document.getElementById('mode-plazo').classList.toggle('active', mode === 'plazo');
-  document.getElementById('ctrl-flota').style.display = mode === 'flota' ? 'block' : 'none';
-  document.getElementById('ctrl-plazo').style.display = mode === 'plazo' ? 'block' : 'none';
+  ['flota','plazo','tarifa'].forEach(m=>{
+    document.getElementById('mode-'+m).classList.toggle('active', m===mode);
+    const fld=document.getElementById('fld-'+m);
+    const inp=document.getElementById('obj-in-'+m);
+    const tag=document.getElementById('tag-'+m);
+    if(m===mode){
+      fld.classList.add('solving'); inp.disabled=true; tag.textContent='resuelve';
+    } else {
+      fld.classList.remove('solving'); inp.disabled=false; tag.textContent='fijo';
+    }
+  });
   updateObjetivo();
 }
 
@@ -1823,98 +1828,122 @@ function calcVANobj(flota, plazo, tarifa, v) {
   return calcVAN(flujos, tDesc);
 }
 
-// Solver: dado flota fijo, encuentra plazo mínimo (meses enteros, max 120)
-function solvePlazo(flota, vanObj, v) {
+// Solver: dado flota+tarifa, encuentra plazo mínimo (meses enteros, max 120)
+function solvePlazo(flota, tarifa, vanObj, v) {
   for (let p = 1; p <= 120; p++) {
-    if (calcVANobj(flota, p, v.tarifa, v) >= vanObj) return p;
+    if (calcVANobj(flota, p, tarifa, v) >= vanObj) return p;
   }
-  return null; // no factible en 120 meses
+  return null;
 }
 
-// Solver: dado plazo fijo, encuentra flota mínima (entera)
-function solveFlota(plazo, vanObj, v) {
-  if (calcVANobj(1, plazo, v.tarifa, v) >= vanObj) return 1;
-  // Bisección en enteros
-  let lo = 1, hi = 2000;
-  if (calcVANobj(hi, plazo, v.tarifa, v) < vanObj) return null;
+// Solver: dado plazo+tarifa, encuentra flota mínima (entera)
+function solveFlota(plazo, tarifa, vanObj, v) {
+  if (calcVANobj(1, plazo, tarifa, v) >= vanObj) return 1;
+  let lo = 1, hi = 5000;
+  if (calcVANobj(hi, plazo, tarifa, v) < vanObj) return null;
   while (hi - lo > 1) {
     const mid = Math.floor((lo + hi) / 2);
-    calcVANobj(mid, plazo, v.tarifa, v) >= vanObj ? hi = mid : lo = mid;
+    calcVANobj(mid, plazo, tarifa, v) >= vanObj ? hi = mid : lo = mid;
   }
   return hi;
 }
 
+// Solver: dado flota+plazo, encuentra tarifa mínima ($/bus/día)
+function solveTarifa(flota, plazo, vanObj, v) {
+  // VAN crece monotónicamente con la tarifa -> bisección
+  let lo = 0, hi = 200000;
+  if (calcVANobj(flota, plazo, hi, v) < vanObj) return null; // ni con tarifa altísima
+  if (calcVANobj(flota, plazo, lo, v) >= vanObj) return 0;     // ya factible con tarifa 0
+  for (let it = 0; it < 60; it++) {
+    const mid = (lo + hi) / 2;
+    if (calcVANobj(flota, plazo, mid, v) >= vanObj) hi = mid; else lo = mid;
+  }
+  return Math.ceil(hi / 50) * 50; // redondea a múltiplo de $50 hacia arriba (conservador)
+}
+
 function updateObjetivo() {
   const v = getVals();
-  // Tarifa propia del Objetivo (editable)
-  const objTarifaInput = document.getElementById('obj-tarifa-input');
-  const objTarifa = +objTarifaInput.value || v.tarifa;
-  // Update UF display
-  const ufDisp = document.getElementById('obj-tarifa-uf-display');
-  if (ufDisp) ufDisp.textContent = (objTarifa*30/40000).toFixed(4) + ' UF/bus/mes · (1 UF = $40.000)';
-  // Override tarifa in v for all objetivo calculations
-  v.tarifa = objTarifa;
   v.dias = 30;
+
+  // Lee los 3 campos numéricos
+  let inFlota = parseInt(document.getElementById('obj-in-flota').value) || 1;
+  let inPlazo = parseInt(document.getElementById('obj-in-plazo').value) || 1;
+  let inTarifa = parseFloat(document.getElementById('obj-in-tarifa').value) || 0;
+  inFlota = Math.max(1, inFlota);
+  inPlazo = Math.max(1, inPlazo);
+  inTarifa = Math.max(0, inTarifa);
 
   const vanObj = +document.getElementById('sl-van-objetivo').value * 1e6;
   document.getElementById('obj-van-disp').textContent = '$' + document.getElementById('sl-van-objetivo').value + 'M';
 
-  let solFlota = null, solPlazo = null;
+  // UF display de la tarifa ingresada
+  const ufDisp = document.getElementById('obj-tarifa-uf-display');
+  if (ufDisp) ufDisp.textContent = (inTarifa*30/40000).toFixed(4) + ' UF/bus/mes · (1 UF = $40.000)';
+
+  let solFlota = inFlota, solPlazo = inPlazo, solTarifa = inTarifa;
+  let okSolve = true;
+  const lbl = document.getElementById('obj-solve-label');
+  const val = document.getElementById('obj-solve-val');
+  const sub = document.getElementById('obj-solve-sub');
 
   if (objMode === 'flota') {
-    solFlota = +document.getElementById('sl-obj-flota').value;
-    document.getElementById('obj-flota-val').textContent = solFlota + (solFlota <= 5 ? ' 🧪' : '') + ' buses';
-    solPlazo = solvePlazo(solFlota, vanObj, v);
-    if (solPlazo !== null) {
-      document.getElementById('obj-plazo-computed').textContent = solPlazo + ' meses';
-      document.getElementById('obj-plazo-computed-sub').textContent = `Con ${solFlota} buses y tarifa $${v.tarifa.toLocaleString('es-CL')}/día`;
-    } else {
-      document.getElementById('obj-plazo-computed').textContent = '>120m';
-      document.getElementById('obj-plazo-computed-sub').textContent = 'No factible con esta flota y tarifa';
-    }
-  } else {
-    solPlazo = +document.getElementById('sl-obj-plazo').value;
-    document.getElementById('obj-plazo-val').textContent = solPlazo + ' meses';
-    solFlota = solveFlota(solPlazo, vanObj, v);
-    if (solFlota !== null) {
-      document.getElementById('obj-flota-computed').textContent = solFlota + ' buses';
-      document.getElementById('obj-flota-computed-sub').textContent = `Con ${solPlazo} meses y tarifa $${v.tarifa.toLocaleString('es-CL')}/día`;
-    } else {
-      document.getElementById('obj-flota-computed').textContent = '>2000 buses';
-      document.getElementById('obj-flota-computed-sub').textContent = 'No factible con este plazo y tarifa';
-    }
+    lbl.textContent = 'Flota mínima requerida';
+    const r = solveFlota(inPlazo, inTarifa, vanObj, v);
+    if (r !== null) {
+      solFlota = r;
+      val.textContent = r.toLocaleString('es-CL') + ' buses';
+      sub.textContent = `Con ${inPlazo} meses y tarifa $${inTarifa.toLocaleString('es-CL')}/día`;
+      document.getElementById('obj-in-flota').value = r;
+    } else { okSolve=false; val.textContent='>5.000 buses'; sub.textContent='No factible con este plazo y tarifa'; }
+  } else if (objMode === 'plazo') {
+    lbl.textContent = 'Plazo mínimo requerido';
+    const r = solvePlazo(inFlota, inTarifa, vanObj, v);
+    if (r !== null) {
+      solPlazo = r;
+      val.textContent = r + ' meses';
+      sub.textContent = `Con ${inFlota.toLocaleString('es-CL')} buses y tarifa $${inTarifa.toLocaleString('es-CL')}/día`;
+      document.getElementById('obj-in-plazo').value = r;
+    } else { okSolve=false; val.textContent='>120 meses'; sub.textContent='No factible con esta flota y tarifa'; }
+  } else { // tarifa
+    lbl.textContent = 'Tarifa mínima requerida';
+    const r = solveTarifa(inFlota, inPlazo, vanObj, v);
+    if (r !== null) {
+      solTarifa = r;
+      val.textContent = '$' + r.toLocaleString('es-CL') + ' /bus/día';
+      sub.textContent = `Con ${inFlota.toLocaleString('es-CL')} buses y ${inPlazo} meses · ${(r*30/40000).toFixed(3)} UF/bus/mes`;
+      document.getElementById('obj-in-tarifa').value = r;
+    } else { okSolve=false; val.textContent='No alcanzable'; sub.textContent='Ni con tarifa muy alta se logra el VAN'; }
   }
 
   // Métricas del punto solución
-  document.getElementById('obj-rc-tarifa').textContent = '$' + v.tarifa.toLocaleString('es-CL');
-  if (solFlota !== null && solPlazo !== null) {
-    const vanSol = calcVANobj(solFlota, solPlazo, v.tarifa, v);
-    const ingresoSol = solFlota * v.tarifa * v.dias;
-    const margenSol = (ingresoSol - v.opex) / ingresoSol;
+  document.getElementById('obj-rc-tarifa').textContent = '$' + Math.round(solTarifa).toLocaleString('es-CL');
+  if (okSolve) {
+    const vanSol = calcVANobj(solFlota, solPlazo, solTarifa, v);
+    const ingresoSol = solFlota * solTarifa * v.dias;
+    const margenSol = ingresoSol>0 ? (ingresoSol - v.opex) / ingresoSol : 0;
     document.getElementById('obj-rc-van').textContent = fmtCLP(vanSol, true);
     document.getElementById('obj-rc-van').style.color = vanSol >= vanObj ? 'var(--accent)' : 'var(--red)';
     document.getElementById('obj-rc-ingreso').textContent = fmtCLP(ingresoSol, true);
     document.getElementById('obj-rc-margen').textContent = (margenSol * 100).toFixed(1) + '%';
 
-    // Status
-    const diff = Math.abs(vanSol - vanObj) / vanObj;
-    let cls = 'ok', icon = '✓', msg = '';
-    if (vanSol < vanObj * 0.95) { cls = 'no'; icon = '✗'; }
-    else if (vanSol < vanObj) { cls = 'warn'; icon = '△'; }
-    if (cls === 'ok') msg = `Con <strong>${solFlota} buses × ${solPlazo} meses</strong> alcanzas un VAN de <strong>${fmtCLP(vanSol, true)}</strong>, superando el objetivo.`;
+    const cls = vanSol < vanObj * 0.95 ? 'no' : (vanSol < vanObj ? 'warn' : 'ok');
+    const icon = cls==='ok' ? '✓' : (cls==='warn' ? '△' : '✗');
+    let msg;
+    if (cls === 'ok') msg = `Con <strong>${solFlota.toLocaleString('es-CL')} buses × ${solPlazo} meses × $${Math.round(solTarifa).toLocaleString('es-CL')}/día</strong> alcanzas un VAN de <strong>${fmtCLP(vanSol, true)}</strong>, cumpliendo el objetivo.`;
     else if (cls === 'warn') msg = `Muy cerca: VAN de ${fmtCLP(vanSol, true)} vs objetivo ${fmtCLP(vanObj, true)}.`;
-    else msg = `No factible con esta configuración. Ajusta tarifa, flota o plazo.`;
+    else msg = `No factible con esta configuración. Ajusta las otras variables.`;
     document.getElementById('obj-status-box').innerHTML = `<div class="obj-status ${cls}"><span class="obj-status-icon">${icon}</span><span>${msg}</span></div>`;
-    document.getElementById('obj-strip-punto').textContent = solFlota + 'b × ' + solPlazo + 'm';
+    document.getElementById('obj-strip-punto').textContent = solFlota.toLocaleString('es-CL') + 'b × ' + solPlazo + 'm';
   } else {
     document.getElementById('obj-rc-van').textContent = 'N/A';
     document.getElementById('obj-rc-ingreso').textContent = 'N/A';
     document.getElementById('obj-rc-margen').textContent = 'N/A';
-    document.getElementById('obj-status-box').innerHTML = `<div class="obj-status no"><span class="obj-status-icon">✗</span><span>No factible con la tarifa actual. Aumenta la tarifa en el evaluador.</span></div>`;
+    document.getElementById('obj-status-box').innerHTML = `<div class="obj-status no"><span class="obj-status-icon">✗</span><span>No factible. Ajusta las variables fijas o el VAN objetivo.</span></div>`;
     document.getElementById('obj-strip-punto').textContent = 'N/A';
   }
 
-  // GRÁFICO
+  // override para el gráfico (usa la tarifa solución)
+  v.tarifa = solTarifa;
   buildObjChart(vanObj, v, solFlota, solPlazo);
 }
 
@@ -1926,7 +1955,7 @@ function buildObjChart(vanObj, v, solFlota, solPlazo) {
   // Puntos de la frontera (flota, plazoMin)
   const frontierPoints = [];
   flotaRange.forEach(f => {
-    const p = solvePlazo(f, vanObj, v);
+    const p = solvePlazo(f, v.tarifa, vanObj, v);
     if (p !== null && p <= 72) frontierPoints.push({x: p, y: f});
   });
 
@@ -2066,9 +2095,13 @@ function buildObjChart(vanObj, v, solFlota, solPlazo) {
   });
 }
 
-// Bind objetivo slider
+// Bind objetivo: slider VAN + 3 campos numéricos del solver
 document.getElementById('sl-van-objetivo')?.addEventListener('input',updateObjetivo);
-document.getElementById('obj-tarifa-input')?.addEventListener('input',updateObjetivo);
+['obj-in-flota','obj-in-plazo','obj-in-tarifa'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('input',updateObjetivo);
+});
+// Estado inicial del solver (modo 'plazo' por defecto: resuelve plazo)
+setObjMode('plazo');
 </script>
 </body>
 </html>
