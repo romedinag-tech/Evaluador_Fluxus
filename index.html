@@ -257,6 +257,59 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 .main-area>header{padding:36px 0 28px}
 @media(max-width:900px){.app-shell{flex-direction:column}.sidebar{width:100%;height:auto;position:relative;display:flex;flex-direction:column}.sb-nav{flex-direction:row;flex-wrap:wrap}.main-area{padding:0 18px 60px}}
 
+/* ===== MOBILE ===== */
+@media(max-width:600px){
+  html{font-size:14px}
+  .page{padding:0 12px 60px}
+  header{padding:20px 0 16px;gap:12px}
+  h1{font-size:24px}
+  .header-sub{font-size:12px}
+  .header-badge{font-size:11px;padding:6px 11px}
+  .nav-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:0}
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-tab{font-size:11px;padding:9px 13px;white-space:nowrap;flex-shrink:0}
+  .main-grid,.mc-grid,.obj-layout,.bottom-grid{grid-template-columns:1fr!important;gap:14px}
+  .metrics-grid{grid-template-columns:1fr 1fr!important}
+  .metric-card{padding:13px 11px}
+  .metric-value{font-size:17px}
+  .metric-label{font-size:9px}
+  .slider-item{padding:10px 13px 12px}
+  .slider-val{font-size:13px;min-width:80px}
+  .slider-name{font-size:12px}
+  input[type=range]::-webkit-slider-thumb{width:22px;height:22px}
+  input[type=range]{height:4px}
+  .chart-canvas-wrap{height:210px}
+  .obj-canvas-wrap{height:240px}
+  .mc-dist-canvas{height:150px}
+  .mc-metrics{grid-template-columns:1fr 1fr!important}
+  .mc-metric{padding:13px 11px}
+  .mc-metric-value{font-size:16px}
+  .mc-percentiles{grid-template-columns:repeat(3,1fr)!important}
+  .mc-run-btn{padding:13px;font-size:13px}
+  .mc-intro,.obj-intro{padding:13px;gap:10px}
+  .obj-info-strip,.obj-result-cards{grid-template-columns:1fr 1fr!important}
+  .obj-van-display{font-size:28px}
+  .obj-computed-val{font-size:18px}
+  .obj-mode-btn{font-size:11px;padding:9px 5px}
+  .tab-group{flex-wrap:wrap;gap:3px}
+  .tab-btn{font-size:10px;padding:5px 9px}
+  .chart-panel-header{gap:8px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{min-width:460px}
+  .sidebar{padding:12px 0}
+  .sidebar-brand{padding:0 13px 10px;margin-bottom:6px}
+  .sidebar-brand .sb-logo{font-size:15px}
+  .sb-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:3px;padding:0 8px;scrollbar-width:none}
+  .sb-nav::-webkit-scrollbar{display:none}
+  .sb-link{padding:7px 11px;font-size:12px;white-space:nowrap}
+  .sb-foot{display:none}
+  .main-area{padding:0 12px 60px}
+  .main-area>header{padding:16px 0 13px}
+  footer{flex-direction:column;gap:5px;text-align:center;margin-top:36px}
+  .panel-header{padding:11px 13px}
+  .scenario-panel{padding:14px}
+}
+
 /* ===== HOME ===== */
 .home-hero{background:linear-gradient(135deg,var(--accent) 0%,#005f7a 100%);border-radius:18px;padding:44px 40px;color:#fff;margin-bottom:28px}
 .home-hero h2{font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.15;margin-bottom:12px;color:#fff}
@@ -595,8 +648,13 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 <!-- ══ OPEX ══════════════════════════════════════════════ -->
 <div id="sec-opex" class="tab-section">
   <div class="cx-panel">
-    <h3>OPEX mensual — costo operacional recurrente</h3>
-    <p class="cx-sub">Define cantidad y precio unitario de cada ítem. Pon cantidad 0 en los que no apliquen desde el inicio.</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+      <h3 style="margin-bottom:0">OPEX mensual — costo operacional recurrente</h3>
+      <button id="btn-amc" onclick="setAMC()" title="A Mínimo Costo: deja solo los ítems esenciales de tecnología" style="display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.04em">
+        <span style="font-size:15px">⚡</span> AMC
+      </button>
+    </div>
+    <p class="cx-sub">Define cantidad y precio unitario de cada ítem. Pon cantidad 0 en los que no apliquen desde el inicio. <strong>AMC</strong> = A Mínimo Costo: solo los ítems tecnológicos esenciales.</p>
     <table class="cx-table">
       <thead><tr><th>Ítem</th><th>P/U mensual (CLP)</th><th>Cantidad</th><th>Total / mes</th></tr></thead>
       <tbody>
@@ -883,9 +941,9 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
         <div class="mc-var-item">
           <div class="mc-var-header"><span class="mc-var-name">Flota de buses</span><span class="mc-var-type">Uniforme</span></div>
           <div class="mc-range-row">
-            <input class="mc-range-input" id="mc-flota-min" type="number" value="3" min="3" max="490">
+            <input class="mc-range-input" id="mc-flota-min" type="number" value="3" min="1" max="1990" oninput="window.__MC_FLOTA_TOUCHED__=true">
             <span class="mc-range-sep">→</span>
-            <input class="mc-range-input" id="mc-flota-max" type="number" value="10" min="4" max="500">
+            <input class="mc-range-input" id="mc-flota-max" type="number" value="10" min="1" max="2000" oninput="window.__MC_FLOTA_TOUCHED__=true">
           </div>
           <div class="mc-range-labels"><span>mínimo (buses)</span><span>máximo (buses)</span></div>
         </div>
@@ -920,6 +978,17 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
           </div>
           <div class="mc-range-labels"><span>optimista ($)</span><span>pesimista ($)</span></div>
           <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">Sugerido ±15% del CAPEX/bus calculado · editable</div>
+        </div>
+
+        <div class="mc-var-item">
+          <div class="mc-var-header"><span class="mc-var-name">Tasa crédito (%/año)</span><span class="mc-var-type">Uniforme</span></div>
+          <div class="mc-range-row">
+            <input class="mc-range-input" id="mc-icred-min" type="number" value="20" min="0" max="80" step="1" oninput="window.__MC_ICRED_TOUCHED__=true">
+            <span class="mc-range-sep">→</span>
+            <input class="mc-range-input" id="mc-icred-max" type="number" value="40" min="0" max="100" step="1" oninput="window.__MC_ICRED_TOUCHED__=true">
+          </div>
+          <div class="mc-range-labels"><span>mínimo (%/año)</span><span>máximo (%/año)</span></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">Auto ±10pp del evaluador · editable</div>
         </div>
 
       </div>
@@ -1340,6 +1409,33 @@ function recalcCapex(){
 }
 
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// AMC — A Mínimo Costo
+// Deja en 0 todos los ítems OPEX excepto:
+//   tec (Técnico terreno), web (Correo + página), sw (Software/cloud base), swb (Software/cloud por bus)
+// ══════════════════════════════════════════════
+function setAMC(){
+  // Ítems a CERO (cantidad)
+  const zeroCols=['ing','ofi','cam','rm','rv','vyr'];
+  zeroCols.forEach(k=>{
+    const qEl=document.getElementById('op-'+k+'-q');
+    if(qEl){ qEl.value=0; }
+  });
+  // Ítems que SE MANTIENEN: tec, web, sw, swb — no tocar
+  recalcOpex();
+  pushToEvaluador();
+  if(typeof update==='function') update();
+  // feedback visual
+  const btn=document.getElementById('btn-amc');
+  if(btn){
+    const orig=btn.innerHTML;
+    btn.innerHTML='<span>✓</span> Aplicado';
+    btn.style.background='var(--accent)';
+    btn.style.color='#fff';
+    setTimeout(()=>{ btn.innerHTML=orig; btn.style.background='var(--accent-dim)'; btn.style.color='var(--accent)'; },2000);
+  }
+}
+
 // OPEX
 // ══════════════════════════════════════════════
 const OPEX_ROWS=[['ing','Analista Ingeniero'],['ofi','Arriendo Oficina/Bodega'],
@@ -1639,6 +1735,13 @@ function updateMCFixed(){
     ['Interés crédito',v.icredPct+'%/año'],
   ].map(([k,val])=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>${k}</span><span style="color:var(--text)">${val}</span></div>`).join('');
 
+  // Auto-sync flota: mínimo = evaluador −15%, máximo = valor del evaluador
+  const fEval=+document.getElementById('sl-flota').value||3;
+  if(!window.__MC_FLOTA_TOUCHED__){
+    document.getElementById('mc-flota-min').value=Math.max(1,Math.round(fEval*0.85));
+    document.getElementById('mc-flota-max').value=fEval;
+  }
+
   // Sugerir rangos OPEX/CAPEX con ±15% sobre los valores calculados (editable)
   const om=window.__OPEX_MES__, cb=window.__CAPEX_BUS__;
   if(om && !window.__MC_OPEX_TOUCHED__){
@@ -1648,6 +1751,12 @@ function updateMCFixed(){
   if(cb && !window.__MC_CAPEX_TOUCHED__){
     document.getElementById('mc-capex-min').value=Math.round(cb*0.85/10000)*10000;
     document.getElementById('mc-capex-max').value=Math.round(cb*1.15/10000)*10000;
+  }
+  // Tasa crédito: ±10pp del evaluador
+  const ic=v.icredPct;
+  if(!window.__MC_ICRED_TOUCHED__){
+    document.getElementById('mc-icred-min').value=Math.max(0,ic-10);
+    document.getElementById('mc-icred-max').value=Math.min(100,ic+10);
   }
 }
 
@@ -1686,6 +1795,8 @@ function runMontecarlo(){
     const opexMax=+document.getElementById('mc-opex-max').value;
     const capexMin=+document.getElementById('mc-capex-min').value;
     const capexMax=+document.getElementById('mc-capex-max').value;
+    const icredMin=+document.getElementById('mc-icred-min').value;
+    const icredMax=+document.getElementById('mc-icred-max').value;
 
     const tMed=(tarifaMin+tarifaMax)/2, tStd=(tarifaMax-tarifaMin)/4;
     const oMed=(opexMin+opexMax)/2, oStd=(opexMax-opexMin)/4;
@@ -1698,7 +1809,8 @@ function runMontecarlo(){
       const tarifa=clamp(randNormal(tMed,tStd),tarifaMin,tarifaMax);
       const opex=clamp(randNormal(oMed,oStd),opexMin,opexMax);
       const capexBus=clamp(randNormal(cMed,cStd),capexMin,capexMax);
-      vans.push(calcVANsim(flota,tarifa,opex,30,capexBus,v.plazo,tDesc,v.pcred,v.icredPct));
+      const icredSim=clamp(randUniform(icredMin,icredMax),0,100);
+      vans.push(calcVANsim(flota,tarifa,opex,30,capexBus,v.plazo,tDesc,v.pcred,icredSim));
     }
 
     vans.sort((a,b)=>a-b);
