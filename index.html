@@ -308,6 +308,27 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
   footer{flex-direction:column;gap:5px;text-align:center;margin-top:36px}
   .panel-header{padding:11px 13px}
   .scenario-panel{padding:14px}
+
+  /* CAPEX / OPEX tables → card layout */
+  .cx-table thead{display:none}
+  .cx-table tbody tr{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center}
+  .cx-table tbody tr.cx-tot-row{grid-template-columns:1fr auto;background:var(--bg3);border-radius:8px;padding:10px 12px;margin-top:4px}
+  .cx-table td{padding:0;border:none;text-align:left!important;font-size:12px}
+  .cx-table td:first-child{grid-column:1/-1;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:2px}
+  .cx-table td.cx-calc{color:var(--accent);font-weight:600;font-size:13px}
+  .cx-in{width:100%!important;font-size:13px!important}
+  /* label for inputs */
+  .cx-table td:nth-child(2)::before{content:'P/U: ';font-size:10px;color:var(--text3);display:block;margin-bottom:2px}
+  .cx-table td:nth-child(3)::before{content:'Cant.: ';font-size:10px;color:var(--text3);display:block;margin-bottom:2px}
+  .cx-table td:nth-child(4)::before{content:'Total: ';font-size:10px;color:var(--text3);display:block;margin-bottom:2px}
+  .cx-table tbody tr.cx-tot-row td:first-child::before{display:none}
+  .cx-table tbody tr.cx-tot-row td:nth-child(2)::before,.cx-table tbody tr.cx-tot-row td:nth-child(3)::before,.cx-table tbody tr.cx-tot-row td:nth-child(4)::before{display:none}
+  /* cx-panel padding */
+  .cx-panel{padding:16px 14px}
+  .cx-grand{padding:16px 18px}
+  .cx-grand .cg-v{font-size:22px}
+  .cx-grid2{gap:12px}
+  .prov-btn{min-width:100%}
 }
 
 /* ===== HOME ===== */
@@ -786,13 +807,17 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 
         <div class="section-sep">Operación</div>
 
-        <div class="slider-item">
-          <div class="slider-top">
-            <span class="slider-name">Flota de buses</span>
-            <span class="slider-val" id="v-flota">3 buses (piloto)</span>
+        <div class="slider-item" style="background:var(--accent-dim);border-left:3px solid var(--accent)">
+          <div class="slider-top" style="margin-bottom:8px">
+            <span class="slider-name" style="color:var(--text)">Flota de buses</span>
+            <input type="number" id="inp-flota" min="1" max="2000" value="3"
+              style="width:90px;font-family:var(--mono);font-size:17px;font-weight:700;color:var(--accent);text-align:right;border:none;border-bottom:2px solid var(--accent);background:transparent;outline:none;padding:2px 0"
+              oninput="onFlotaInput(this.value)">
           </div>
-          <input type="range" id="sl-flota" min="1" max="2000" step="1" value="3">
-          <div class="slider-limits"><span>1 (piloto)</span><span>2.000</span></div>
+          <input type="range" id="sl-flota" min="1" max="2000" step="1" value="3"
+            oninput="onFlotaSlider(this.value)">
+          <div class="slider-limits"><span>1 bus</span><span>2.000</span></div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:5px">Base: Home (<span id="v-flota-home">3</span> buses) · editable aquí para sensibilizar</div>
         </div>
 
         <div class="slider-item">
@@ -820,22 +845,22 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 
         <div class="section-sep">Costos</div>
 
-        <div class="slider-item">
-          <div class="slider-top">
-            <span class="slider-name">OPEX mensual</span>
-            <span class="slider-val" id="v-opex">$9.000.000</span>
+        <div class="slider-item" style="background:var(--warn-dim);border-left:3px solid var(--warn)">
+          <div class="slider-top" style="margin-bottom:4px">
+            <span class="slider-name" style="color:var(--text)">OPEX mensual</span>
+            <span class="slider-val" id="v-opex" style="color:var(--warn);font-weight:700">$9.000.000</span>
           </div>
-          <input type="range" id="sl-opex" min="1000000" max="20000000" step="500000" value="9000000">
-          <div class="slider-limits"><span>$1M</span><span>$20M</span></div>
+          <input type="range" id="sl-opex" min="1000000" max="20000000" step="500000" value="9000000" style="display:none">
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Vinculado a pestaña OPEX · edita allí</div>
         </div>
 
-        <div class="slider-item">
-          <div class="slider-top">
-            <span class="slider-name">Costo por bus (CAPEX)</span>
-            <span class="slider-val" id="v-capexbus">$746.500</span>
+        <div class="slider-item" style="background:var(--blue-dim);border-left:3px solid var(--blue)">
+          <div class="slider-top" style="margin-bottom:4px">
+            <span class="slider-name" style="color:var(--text)">Costo por bus (CAPEX)</span>
+            <span class="slider-val" id="v-capexbus" style="color:var(--blue);font-weight:700">$746.500</span>
           </div>
-          <input type="range" id="sl-capexbus" min="300000" max="1500000" step="50000" value="746500">
-          <div class="slider-limits"><span>$300k</span><span>$1.5M</span></div>
+          <input type="range" id="sl-capexbus" min="300000" max="1500000" step="50000" value="746500" style="display:none">
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">Vinculado a pestaña CAPEX · edita allí</div>
         </div>
 
         <div class="section-sep">Financiamiento</div>
@@ -1220,6 +1245,7 @@ function navTo(sec){
   const t=SEC_TITLE[sec]||['',''];
   const pt=document.getElementById('page-title'), ps=document.getElementById('page-sub');
   if(pt)pt.textContent=t[0]; if(ps)ps.textContent=t[1];
+  if(sec==='opex'){ recalcOpex(); pushToEvaluador(); }
   if(sec==='montecarlo')updateMCFixed();
   if(sec==='objetivo')updateObjetivo();
   if(sec==='evaluador')update();
@@ -1239,12 +1265,30 @@ function getFlota(){
 }
 function syncFlota(){
   const f=getFlota();
-  // sincroniza el slider del evaluador
+  // slider hidden del evaluador (para getVals())
   const sl=document.getElementById('sl-flota');
   if(sl){ sl.value=Math.min(f, +sl.max); }
+  // input numérico y slider visible
+  const inp=document.getElementById('inp-flota');
+  if(inp && document.activeElement!==inp) inp.value=f;
+  const fh=document.getElementById('v-flota-home');
+  if(fh) fh.textContent=f.toLocaleString('es-CL');
   const hf=document.getElementById('hdr-flota'); if(hf) hf.textContent=f.toLocaleString('es-CL')+' buses';
   const c1=document.getElementById('cx-flota-1'); if(c1) c1.textContent=f.toLocaleString('es-CL');
   document.querySelectorAll('#cx-kit-q,#cx-cab-q,#cx-ins-q,#cx-enc-q').forEach(e=>e.textContent=f.toLocaleString('es-CL'));
+  if(typeof update==='function') update();
+}
+
+// Flota editable desde evaluador (sensibilización local, no toca Home)
+function onFlotaInput(val){
+  const f=Math.max(1,Math.min(2000,parseInt(val)||1));
+  const sl=document.getElementById('sl-flota'); if(sl) sl.value=f;
+  if(typeof update==='function') update();
+}
+function onFlotaSlider(val){
+  const f=+val;
+  const inp=document.getElementById('inp-flota'); if(inp) inp.value=f;
+  if(typeof update==='function') update();
 }
 
 // ══════════════════════════════════════════════
@@ -1478,8 +1522,20 @@ function recalcOpex(){
 // ══════════════════════════════════════════════
 function pushToEvaluador(){
   const cb=window.__CAPEX_BUS__, om=window.__OPEX_MES__;
-  if(cb){ const sl=document.getElementById('sl-capexbus'); if(sl) sl.value=Math.min(Math.max(Math.round(cb),+sl.min),+sl.max); }
-  if(om){ const so=document.getElementById('sl-opex'); if(so) so.value=Math.min(Math.max(Math.round(om),+so.min),+so.max); }
+  const f0=n=>'$'+(Math.abs(n)>=1e6?(n/1e6).toFixed(2)+'M':Math.round(n).toLocaleString('es-CL'));
+  if(cb){
+    const sl=document.getElementById('sl-capexbus');
+    if(sl) sl.value=Math.min(Math.max(Math.round(cb),+sl.min),+sl.max);
+    const vc=document.getElementById('v-capexbus');
+    if(vc) vc.textContent=f0(cb)+'/bus';
+  }
+  if(om){
+    const so=document.getElementById('sl-opex');
+    if(so) so.value=Math.min(Math.max(Math.round(om),+so.min),+so.max);
+    const vo=document.getElementById('v-opex');
+    if(vo) vo.textContent=f0(om)+'/mes';
+  }
+  if(typeof update==='function') update();
 }
 
 // estima probabilidad de éxito tipo Montecarlo (rápida, ±15% sobre tarifa/opex/capex)
@@ -1590,7 +1646,13 @@ document.getElementById('cx-flota-local').addEventListener('input',()=>{
 // software por-bus: solo P/U (la cantidad es la flota, calculada)
 document.getElementById('op-swb-pu').addEventListener('input',()=>{ recalcOpex(); pushToEvaluador(); if(typeof update==='function')update(); });
 
-window.addEventListener('load',()=>{ recalcAll(); navTo('home'); });
+window.addEventListener('load',()=>{
+  // primer pase inmediato
+  recalcAll();
+  navTo('home');
+  // segundo pase: garantiza que todos los inputs HTML estén pintados con su value
+  setTimeout(()=>{ recalcAll(); }, 100);
+});
 
 // ══════════════════════════════════════════════
 // EVALUADOR
@@ -1598,8 +1660,11 @@ window.addEventListener('load',()=>{ recalcAll(); navTo('home'); });
 let activeTab='acum', chart=null;
 
 function getVals(){
+  // flota: preferir inp-flota (editable local) si existe, sino sl-flota
+  const _inpF=document.getElementById('inp-flota');
+  const _flotaVal=_inpF?Math.max(1,Math.min(2000,parseInt(_inpF.value)||1)):+document.getElementById('sl-flota').value;
   return{
-    flota:+document.getElementById('sl-flota').value,
+    flota:_flotaVal,
     plazo:+document.getElementById('sl-plazo').value,
     tarifa:+document.getElementById('sl-tarifa').value,
     dias:30,
