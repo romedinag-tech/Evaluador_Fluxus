@@ -648,7 +648,9 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
           <div class="cx-slider-row"><label>¿Recupera IVA? (crédito fiscal)</label><input type="range" id="ck-recup" min="0" max="1" step="1" value="1"><span class="csr-v" id="ck-recup-v">Sí</span></div>
           <div class="cx-slider-row"><label>Cámaras por bus</label><input type="range" id="ck-cam" min="1" max="4" step="1" value="2"><span class="csr-v" id="ck-cam-v">2</span></div>
           <div class="cx-slider-row"><label>Descuento por volumen s/ FOB</label><input type="range" id="ck-desc" min="0" max="45" step="1" value="18"><span class="csr-v" id="ck-desc-v">18%</span></div>
-          <div class="cx-slider-row"><label>Buses por embarque</label><input type="range" id="ck-emb" min="10" max="300" step="10" value="50"><span class="csr-v" id="ck-emb-v">50</span></div>
+          <div class="cx-slider-row"><label>Buses por embarque (modo consolidado)</label><input type="range" id="ck-emb" min="10" max="300" step="10" value="50"><span class="csr-v" id="ck-emb-v">50</span></div>
+          <div class="cx-slider-row"><label>Modo internación</label><input type="range" id="ck-mode" min="0" max="1" step="1" value="1"><span class="csr-v" id="ck-mode-v">Courier</span></div>
+          <div class="cx-slider-row"><label>Despacho courier neto (CLP/kit)</label><input type="range" id="ck-desp" min="20000" max="120000" step="1000" value="50633"><span class="csr-v" id="ck-desp-v">$50.633</span></div>
         </div>
         <div>
           <h3 style="margin-bottom:14px">Desglose del kit (por bus)</h3>
@@ -657,11 +659,11 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
           <div class="cx-kv"><span class="kv-k">Flete proporcional</span><span class="kv-v" id="ck-flete">—</span></div>
           <div class="cx-kv"><span class="kv-k">Pago proveedor (CLP)</span><span class="kv-v" id="ck-pago">—</span></div>
           <div class="cx-kv"><span class="kv-k">IVA internación</span><span class="kv-v" id="ck-ivam">—</span></div>
-          <div class="cx-kv"><span class="kv-k">Agente aduana (prorrateado/bus)</span><span class="kv-v" id="ck-agente">—</span></div>
+          <div class="cx-kv"><span class="kv-k" id="ck-agente-k">Despacho / internación (por bus)</span><span class="kv-v" id="ck-agente">—</span></div>
           <div class="cx-kv" style="border-top:2px solid var(--border2);margin-top:6px;padding-top:12px"><span class="kv-k" style="font-weight:700">COSTO KIT POR BUS</span><span class="kv-v" id="ck-total" style="font-size:16px;color:var(--accent)">—</span></div>
         </div>
       </div>
-      <p class="cx-note" id="ck-note">Foorir: cámara HX-CCD22 US$225 (binocular) + host HX-M20 US$169. Calibrado con importación real 28-abr-2026.</p>
+      <p class="cx-note" id="ck-note">Foorir: cámara HX-CCD22 US$225 (binocular) + host HX-M20 US$169 + flete US$60 (Alibaba #298353163501024648, total US$454). Internación courier calibrada con boleta UPS HV2525B7X7D: despacho neto $50.633 + IVA importación $81.608 (recuperable).</p>
     </div>
   </div>
 </div>
@@ -1297,7 +1299,7 @@ function onFlotaSlider(val){
 let PROV='foorir';
 const PROV_DATA={
   foorir:{ fobCam:225, fobHost:169, fleteCot:60, artCot:2,
-           note:'Foorir: cámara HX-CCD22 US$225 (binocular/estéreo 3D) + host HX-M20 US$169. Calibrado con importación real 28-abr-2026.' },
+           note:'Foorir: cámara HX-CCD22 US$225 (binocular/estéreo 3D) + host HX-M20 US$169 + flete US$60 (receipt Alibaba #298353163501024648, total US$454). Internación courier calibrada con boleta UPS HV2525B7X7D: despacho neto $50.633 + IVA importación $81.608 (recuperable).' },
   alway:{  fobCam:0,  fobHost:0,  fobKit:453, fleteCot:60, artCot:3, cables:12,
            note:'AlwayCare PC26: kit cerrado US$453 (MDVR + 2 cám APC monocular + DMS) + cables ≈US$12. Flete asumido = Foorir (confirmar).' }
 };
@@ -1317,12 +1319,16 @@ function recalcCotiz(){
   const NCAM=+document.getElementById('ck-cam').value;
   const DESC=+document.getElementById('ck-desc').value/100;
   const EMB=+document.getElementById('ck-emb').value;
+  const MODE=+document.getElementById('ck-mode').value;   // 0=consolidado, 1=courier
+  const DESP=+document.getElementById('ck-desp').value;   // despacho courier neto CLP/kit (boleta UPS)
   document.getElementById('ck-tc-v').textContent=TC;
   document.getElementById('ck-iva-v').textContent=(IVA*100).toFixed(0)+'%';
   document.getElementById('ck-recup-v').textContent=RECUP?'Sí':'No';
   document.getElementById('ck-cam-v').textContent=NCAM;
   document.getElementById('ck-desc-v').textContent=(DESC*100).toFixed(0)+'%';
   document.getElementById('ck-emb-v').textContent=EMB;
+  document.getElementById('ck-mode-v').textContent=MODE?'Courier':'Consolidado';
+  document.getElementById('ck-desp-v').textContent='$'+DESP.toLocaleString('es-CL');
 
   // mini-tabla aduana (mismos defaults del Excel)
   const HON_MIN=100000, HON_PCT=0.005, GASTOS_DESP=120000;
@@ -1344,11 +1350,17 @@ function recalcCotiz(){
   const fobBus = fobCamTot + fobHost;            // US$
   const cifBus = fobBus + flete;                 // US$
   const pagoCLP = cifBus*TC;
-  const ivaCLP  = pagoCLP*IVA;
-  // agente prorrateado: (MAX(min ; %·CIF_embarque) + gastos) / buses_embarque
+  const ivaCLP  = pagoCLP*IVA;                    // IVA de importación s/ CIF (recuperable como crédito fiscal)
+  // Despacho / internación por bus, según modo:
+  //  - Courier (piloto): cobro neto fijo por kit, calibrado a boleta UPS HV2525B7X7D ($50.633 neto).
+  //  - Consolidado (escala): agente de aduana prorrateado (MAX(min ; %·CIF_embarque) + gastos) / buses_embarque.
   const cifEmbCLP = cifBus*TC*EMB;
-  const agenteBus = (Math.max(HON_MIN, cifEmbCLP*HON_PCT)+GASTOS_DESP)/EMB;
-  const costoKit = pagoCLP + (RECUP? 0 : ivaCLP) + agenteBus;
+  const despachoBus = MODE===1
+        ? DESP
+        : (Math.max(HON_MIN, cifEmbCLP*HON_PCT)+GASTOS_DESP)/EMB;
+  const ivaDespCLP = despachoBus*IVA;             // IVA del servicio de despacho (también recuperable)
+  // El IVA (importación + servicio) solo entra al costo si NO se recupera.
+  const costoKit = pagoCLP + despachoBus + (RECUP? 0 : ivaCLP + ivaDespCLP);
 
   const f0=n=>'$'+Math.round(n).toLocaleString('es-CL');
   const u0=n=>'US$'+Math.round(n).toLocaleString('es-CL');
@@ -1356,8 +1368,13 @@ function recalcCotiz(){
   document.getElementById('ck-fob-host').textContent=u0(fobHost);
   document.getElementById('ck-flete').textContent=u0(flete);
   document.getElementById('ck-pago').textContent=f0(pagoCLP);
-  document.getElementById('ck-ivam').textContent=f0(ivaCLP)+(RECUP?' (recup.)':'');
-  document.getElementById('ck-agente').textContent=f0(agenteBus);
+  // IVA total de internación (importación + servicio despacho). Recuperable por defecto.
+  const ivaTotalCLP = ivaCLP + ivaDespCLP;
+  document.getElementById('ck-ivam').textContent=f0(ivaTotalCLP)+(RECUP?' (crédito fiscal)':' (al costo)');
+  document.getElementById('ck-agente-k').textContent = MODE===1
+        ? 'Despacho courier neto (por bus)'
+        : 'Agente aduana consolidado (por bus)';
+  document.getElementById('ck-agente').textContent=f0(despachoBus);
   document.getElementById('ck-total').textContent=f0(costoKit);
 
   // valores en botones de proveedor (referenciales con params actuales)
@@ -1631,7 +1648,7 @@ document.getElementById('home-flota').addEventListener('input',()=>{
 document.getElementById('cx-flota-local').addEventListener('input',()=>{
   recalcCotiz(); pushToEvaluador(); if(typeof update==='function')update();
 });
-['ck-tc','ck-iva','ck-recup','ck-cam','ck-desc','ck-emb'].forEach(id=>{
+['ck-tc','ck-iva','ck-recup','ck-cam','ck-desc','ck-emb','ck-mode','ck-desp'].forEach(id=>{
   document.getElementById(id).addEventListener('input',()=>{ recalcCotiz(); pushToEvaluador(); if(typeof update==='function')update(); });
 });
 ['cx-cab-pu','cx-ins-pu','cx-enc-pu','cx-ninst','cx-prod','cx-inst-cam','cx-inst-sup','cx-her-pu','cx-nb-pu','cx-pca-pu','cx-sup-pu','cx-veh-pu','cx-tras-pu'].forEach(id=>{
@@ -1684,7 +1701,12 @@ function setTab(t){
 
 function update(){
   const v=getVals();
-  document.getElementById('v-flota').textContent=v.flota+(v.flota<=5?' buses 🧪 piloto':' buses');
+  // El control de flota del evaluador ahora es un <input>, no un <span id="v-flota">.
+  // Se actualiza de forma segura (sin romper si el elemento no existe).
+  const _vFlota=document.getElementById('v-flota');
+  if(_vFlota) _vFlota.textContent=v.flota+(v.flota<=5?' buses 🧪 piloto':' buses');
+  const _inpFlotaDisp=document.getElementById('inp-flota');
+  if(_inpFlotaDisp && document.activeElement!==_inpFlotaDisp) _inpFlotaDisp.value=v.flota;
   document.getElementById('v-plazo').textContent=v.plazo+' meses';
   document.getElementById('v-tarifa').textContent='$'+v.tarifa.toLocaleString('es-CL');
   document.getElementById('v-tarifa-uf').textContent=(v.tarifa*30/40000).toFixed(3)+' UF/bus/mes';
@@ -1784,7 +1806,9 @@ function update(){
 }
 
 document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',update));
-update();
+// El primer update() se aísla: si fallara por un elemento ausente, el resto del
+// script (Montecarlo y Escenario Objetivo) debe seguir inicializándose igual.
+try{ update(); }catch(e){ console.warn('update() inicial falló:',e); }
 
 // ══════════════════════════════════════════════
 // MONTECARLO
