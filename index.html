@@ -813,7 +813,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
     <div class="table-wrap">
       <table class="cx-table" id="scn-table">
-        <thead><tr><th>Escenario</th><th>Flota</th><th>Plazo</th><th>Tarifa</th><th>CAPEX</th><th>OPEX/mes</th><th>VAN</th><th>TIR</th><th>Payback</th><th></th></tr></thead>
+        <thead><tr><th>Escenario</th><th>Flota</th><th>Plazo</th><th>Tarifa (UF/mes)</th><th>CAPEX</th><th>OPEX/mes</th><th>VAN</th><th>TIR</th><th>Payback</th><th></th></tr></thead>
         <tbody id="scn-tbody"><tr><td colspan="10" style="text-align:center;color:var(--text3);padding:14px">Sin escenarios guardados aún.</td></tr></tbody>
       </table>
     </div>
@@ -862,19 +862,19 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 
         <div class="slider-item">
           <div class="slider-top">
-            <span class="slider-name">Tarifa por bus / día</span>
+            <span class="slider-name">Tarifa por bus / mes (UF)</span>
             <span style="display:flex;align-items:baseline;gap:4px">
-              <span style="font-size:13px;color:var(--text3)">$</span>
-              <input type="number" id="inp-tarifa" min="0" max="50000" step="100" value="4500"
+              <input type="number" id="inp-tarifa" min="0" max="50" step="0.05" value="3.375"
                 style="width:84px;font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);text-align:right;border:none;border-bottom:1.5px solid var(--border2);background:transparent;outline:none;padding:2px 0"
                 oninput="onTarifaInput(this.value)">
+              <span style="font-size:13px;color:var(--text3)">UF/mes</span>
             </span>
           </div>
-          <input type="range" id="sl-tarifa" min="1000" max="15000" step="500" value="4500" oninput="onTarifaSlider(this.value)">
-          <div class="slider-limits"><span>$1.000</span><span>$15.000 (barra) · escribe hasta $50.000</span></div>
+          <input type="range" id="sl-tarifa" min="0.5" max="12" step="0.25" value="3.375" oninput="onTarifaSlider(this.value)">
+          <div class="slider-limits"><span>0,5 UF</span><span>12 UF (barra) · escribe hasta 50 UF/mes</span></div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:var(--bg3);border-radius:6px;border:1px solid var(--border)">
-            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">UF equivalente:</span>
-            <span id="v-tarifa-uf" style="font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent)">0,11 UF/bus/día</span>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">Equivalente en pesos:</span>
+            <span id="v-tarifa-uf" style="font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent)">$135.000 /bus/mes</span>
             <span style="font-size:10px;color:var(--text3)">(1 UF = $40.000)</span>
           </div>
         </div>
@@ -1020,13 +1020,13 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
         </div>
 
         <div class="mc-var-item">
-          <div class="mc-var-header"><span class="mc-var-name">Tarifa por bus / día</span><span class="mc-var-type">Normal</span></div>
+          <div class="mc-var-header"><span class="mc-var-name">Tarifa por bus / mes (UF)</span><span class="mc-var-type">Normal</span></div>
           <div class="mc-range-row">
-            <input class="mc-range-input" id="mc-tarifa-min" type="number" value="3500" step="500">
+            <input class="mc-range-input" id="mc-tarifa-min" type="number" value="2.625" step="0.25">
             <span class="mc-range-sep">→</span>
-            <input class="mc-range-input" id="mc-tarifa-max" type="number" value="6000" step="500">
+            <input class="mc-range-input" id="mc-tarifa-max" type="number" value="4.5" step="0.25">
           </div>
-          <div class="mc-range-labels"><span>pesimista ($)</span><span>optimista ($)</span></div>
+          <div class="mc-range-labels"><span>pesimista (UF/mes)</span><span>optimista (UF/mes)</span></div>
         </div>
 
         <div class="mc-var-item">
@@ -1182,8 +1182,8 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
             <span class="obj-solve-tag" id="tag-plazo"></span>
           </div>
           <div class="obj-solve-field" id="fld-tarifa">
-            <label>Tarifa ($/bus/día)</label>
-            <input type="number" id="obj-in-tarifa" value="4500" min="100" max="50000" step="100">
+            <label>Tarifa (UF/bus/mes)</label>
+            <input type="number" id="obj-in-tarifa" value="3.375" min="0.05" max="50" step="0.05">
             <span class="obj-solve-tag" id="tag-tarifa"></span>
           </div>
         </div>
@@ -1207,7 +1207,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
         <div class="obj-label">Resultado del solver</div>
         <div id="obj-status-box"></div>
         <div class="obj-result-cards">
-          <div class="obj-rc"><div class="obj-rc-lbl">Tarifa actual</div><div class="obj-rc-val" id="obj-rc-tarifa" style="color:var(--blue)">—</div><div class="obj-rc-sub">por bus / día</div></div>
+          <div class="obj-rc"><div class="obj-rc-lbl">Tarifa actual</div><div class="obj-rc-val" id="obj-rc-tarifa" style="color:var(--blue)">—</div><div class="obj-rc-sub">UF por bus / mes</div></div>
           <div class="obj-rc"><div class="obj-rc-lbl">VAN proyectado</div><div class="obj-rc-val" id="obj-rc-van" style="color:var(--accent)">—</div><div class="obj-rc-sub">con solución</div></div>
           <div class="obj-rc"><div class="obj-rc-lbl">Ingreso mensual</div><div class="obj-rc-val" id="obj-rc-ingreso" style="color:var(--blue)">—</div><div class="obj-rc-sub">bruto</div></div>
           <div class="obj-rc"><div class="obj-rc-lbl">Margen operac.</div><div class="obj-rc-val" id="obj-rc-margen" style="color:var(--accent)">—</div><div class="obj-rc-sub">sobre ingreso</div></div>
@@ -1621,7 +1621,7 @@ function estimaProbMC(){
       const op=v.opex*(0.85+Math.random()*0.30);
       const cx=v.capexBus*(0.85+Math.random()*0.30);
       const F=v.flota, plazo=v.plazo;
-      const ing=tf*30*F, eg=op, fm=ing-eg;
+      const ing=tf*40000*F, eg=op, fm=ing-eg; // tf en UF/bus/mes × valor UF
       const capex=cx*F;
       const tDesc=(v.tdescPct/10)/100;
       let van=-capex;
@@ -1741,7 +1741,8 @@ function getVals(){
   const _inpP=document.getElementById('inp-plazo');
   const _plazoVal=_inpP?Math.max(1,Math.min(120,parseInt(_inpP.value)||1)):+document.getElementById('sl-plazo').value;
   const _inpT=document.getElementById('inp-tarifa');
-  const _tarifaVal=_inpT?Math.max(0,Math.min(50000,parseInt(_inpT.value)||0)):+document.getElementById('sl-tarifa').value;
+  // tarifa en UF/bus/mes (1 UF = $40.000)
+  const _tarifaVal=_inpT?Math.max(0,Math.min(50,parseFloat(_inpT.value)||0)):+document.getElementById('sl-tarifa').value;
   const _slRamp=document.getElementById('sl-ramp');
   return{
     flota:_flotaVal,
@@ -1768,7 +1769,7 @@ function onPlazoSlider(val){
   update();
 }
 function onTarifaInput(val){
-  const t=Math.max(0,Math.min(50000,parseInt(val)||0));
+  const t=Math.max(0,Math.min(50,parseFloat(val)||0)); // UF/bus/mes
   const sl=document.getElementById('sl-tarifa'); if(sl) sl.value=Math.min(Math.max(t,+sl.min),+sl.max);
   update();
 }
@@ -1799,7 +1800,7 @@ function update(){
   if(_inpTarifa && document.activeElement!==_inpTarifa) _inpTarifa.value=v.tarifa;
   const _slTarifa=document.getElementById('sl-tarifa'); if(_slTarifa) _slTarifa.value=Math.min(Math.max(v.tarifa,+_slTarifa.min),+_slTarifa.max);
   const _vRamp=document.getElementById('v-ramp'); if(_vRamp) _vRamp.textContent=(v.ramp===0?'Inmediato':v.ramp+' meses');
-  document.getElementById('v-tarifa-uf').textContent=(v.tarifa*30/40000).toFixed(3)+' UF/bus/mes';
+  document.getElementById('v-tarifa-uf').textContent='$'+Math.round(v.tarifa*40000).toLocaleString('es-CL')+' /bus/mes';
   document.getElementById('v-opex').textContent=fmtCLP(v.opex,true);
   document.getElementById('v-capexbus').textContent='$'+v.capexBus.toLocaleString('es-CL');
   document.getElementById('v-tdesc').textContent=(v.tdescPct/10).toFixed(1)+'% / mes';
@@ -1809,7 +1810,8 @@ function update(){
   const tDesc=v.tdescPct/1000;
   const tCredMes=Math.pow(1+v.icredPct/100,1/12)-1;
   const capex=v.capexBus*v.flota;
-  const ingresoMes=v.flota*v.tarifa*v.dias;
+  // tarifa en UF/bus/mes → ingreso CLP/mes = flota × tarifa × valor UF ($40.000)
+  const ingresoMes=v.flota*v.tarifa*40000;
   const flujoOpMes=ingresoMes-v.opex;
   const cuota=cuotaFrances(capex,tCredMes,v.pcred);
   const costoCred=v.pcred>0?cuota*v.pcred-capex:0;
@@ -1845,7 +1847,7 @@ function update(){
   document.getElementById('mv-flujo').textContent=fmtCLP(flujoOpMes,true);
   document.getElementById('mc-flujo').className='metric-card '+(flujoOpMes>=0?'is-pos':'is-neg');
   document.getElementById('mv-ingreso').textContent=fmtCLP(ingresoMes,true);
-  document.getElementById('ms-ingreso').textContent=v.flota+'b × $'+v.tarifa.toLocaleString('es-CL')+' × 30d';
+  document.getElementById('ms-ingreso').textContent=v.flota+'b × '+v.tarifa.toLocaleString('es-CL',{maximumFractionDigits:3})+' UF/mes × $40.000';
   document.getElementById('mv-capex').textContent=fmtCLP(capex,true);
   document.getElementById('mv-cuota').textContent=useCred?fmtCLP(cuota,true):'—';
   document.getElementById('ms-cuota').textContent=useCred?'Total: '+fmtCLP(costoCred,true):'Sin financiamiento';
@@ -1893,7 +1895,7 @@ function update(){
   else desc=`Flujo operacional ${flujoOpMes<0?'negativo':'no cubre el CAPEX'}. Ajustar tarifa, flota o plazo.`;
   document.getElementById('scenario-box').innerHTML=`<div class="scenario-result ${cls}"><div class="scenario-icon">${ic}</div><div class="scenario-text"><h3>${ti}</h3><p>${desc}</p></div></div>`;
 
-  const kpis=[['CAPEX / bus',fmtCLP(v.capexBus,false),'var(--text)'],['Ingreso / bus / mes',fmtCLP(v.tarifa*v.dias,false),'var(--blue)'],['OPEX / bus / mes',fmtCLP(v.opex/v.flota,false),'var(--warn)'],['Margen bruto',(margen*100).toFixed(1)+'%',margen>0?'var(--accent)':'var(--red)'],['Cuota / ingreso',useCred?((cuota/ingresoMes)*100).toFixed(1)+'%':'N/A','var(--gold)'],['VAN / CAPEX',(van/capex*100).toFixed(1)+'%',van>0?'var(--accent)':'var(--red)']];
+  const kpis=[['CAPEX / bus',fmtCLP(v.capexBus,false),'var(--text)'],['Ingreso / bus / mes',fmtCLP(v.tarifa*40000,false),'var(--blue)'],['OPEX / bus / mes',fmtCLP(v.opex/v.flota,false),'var(--warn)'],['Margen bruto',(margen*100).toFixed(1)+'%',margen>0?'var(--accent)':'var(--red)'],['Cuota / ingreso',useCred?((cuota/ingresoMes)*100).toFixed(1)+'%':'N/A','var(--gold)'],['VAN / CAPEX',(van/capex*100).toFixed(1)+'%',van>0?'var(--accent)':'var(--red)']];
   document.getElementById('kpi-row').innerHTML=kpis.map(([n,val,col])=>`<div class="kpi-item"><span class="kpi-name">${n}</span><span class="kpi-val" style="color:${col}">${val}</span></div>`).join('');
 }
 
@@ -1948,7 +1950,8 @@ function clamp(val,min,max){return Math.min(Math.max(val,min),max);}
 function calcVANsim(flota,tarifa,opex,dias,capexBus,plazo,tDesc,pcred,icredPct){
   const tCred=Math.pow(1+icredPct/100,1/12)-1;
   const capex=capexBus*flota;
-  const ingresoMes=flota*tarifa*dias;
+  // tarifa en UF/bus/mes → ingreso CLP/mes = flota × tarifa × $40.000 (param 'dias' ya no se usa)
+  const ingresoMes=flota*tarifa*40000;
   const flujoOp=ingresoMes-opex;
   const cuota=cuotaFrances(capex,tCred,pcred);
   const useCred=pcred>0;
@@ -2118,7 +2121,8 @@ function calcVANobj(flota, plazo, tarifa, v) {
   const tDesc = v.tdescPct / 1000;
   const tCredMes = Math.pow(1 + v.icredPct / 100, 1 / 12) - 1;
   const capex = v.capexBus * flota;
-  const ingresoMes = flota * tarifa * 30;
+  // tarifa en UF/bus/mes → ingreso CLP/mes = flota × tarifa × $40.000
+  const ingresoMes = flota * tarifa * 40000;
   const flujoOp = ingresoMes - v.opex;
   const cuota = cuotaFrances(capex, tCredMes, v.pcred);
   const useCred = v.pcred > 0;
@@ -2147,17 +2151,17 @@ function solveFlota(plazo, tarifa, vanObj, v) {
   return hi;
 }
 
-// Solver: dado flota+plazo, encuentra tarifa mínima ($/bus/día)
+// Solver: dado flota+plazo, encuentra tarifa mínima (UF/bus/mes)
 function solveTarifa(flota, plazo, vanObj, v) {
   // VAN crece monotónicamente con la tarifa -> bisección
-  let lo = 0, hi = 200000;
+  let lo = 0, hi = 200; // UF/bus/mes
   if (calcVANobj(flota, plazo, hi, v) < vanObj) return null; // ni con tarifa altísima
   if (calcVANobj(flota, plazo, lo, v) >= vanObj) return 0;     // ya factible con tarifa 0
   for (let it = 0; it < 60; it++) {
     const mid = (lo + hi) / 2;
     if (calcVANobj(flota, plazo, mid, v) >= vanObj) hi = mid; else lo = mid;
   }
-  return Math.ceil(hi / 50) * 50; // redondea a múltiplo de $50 hacia arriba (conservador)
+  return Math.ceil(hi / 0.05) * 0.05; // redondea a múltiplo de 0,05 UF hacia arriba (conservador)
 }
 
 function updateObjetivo() {
@@ -2175,9 +2179,9 @@ function updateObjetivo() {
   const vanObj = +document.getElementById('sl-van-objetivo').value * 1e6;
   document.getElementById('obj-van-disp').textContent = '$' + document.getElementById('sl-van-objetivo').value + 'M';
 
-  // UF display de la tarifa ingresada
+  // equivalente en pesos de la tarifa ingresada (la tarifa ya está en UF/bus/mes)
   const ufDisp = document.getElementById('obj-tarifa-uf-display');
-  if (ufDisp) ufDisp.textContent = (inTarifa*30/40000).toFixed(4) + ' UF/bus/mes · (1 UF = $40.000)';
+  if (ufDisp) ufDisp.textContent = inTarifa.toFixed(3) + ' UF/bus/mes · ≈ $' + Math.round(inTarifa*40000).toLocaleString('es-CL') + '/bus/mes (1 UF = $40.000)';
 
   let solFlota = inFlota, solPlazo = inPlazo, solTarifa = inTarifa;
   let okSolve = true;
@@ -2191,7 +2195,7 @@ function updateObjetivo() {
     if (r !== null) {
       solFlota = r;
       val.textContent = r.toLocaleString('es-CL') + ' buses';
-      sub.textContent = `Con ${inPlazo} meses y tarifa $${inTarifa.toLocaleString('es-CL')}/día`;
+      sub.textContent = `Con ${inPlazo} meses y tarifa ${inTarifa.toLocaleString('es-CL',{maximumFractionDigits:3})} UF/bus/mes`;
       document.getElementById('obj-in-flota').value = r;
     } else { okSolve=false; val.textContent='>5.000 buses'; sub.textContent='No factible con este plazo y tarifa'; }
   } else if (objMode === 'plazo') {
@@ -2200,7 +2204,7 @@ function updateObjetivo() {
     if (r !== null) {
       solPlazo = r;
       val.textContent = r + ' meses';
-      sub.textContent = `Con ${inFlota.toLocaleString('es-CL')} buses y tarifa $${inTarifa.toLocaleString('es-CL')}/día`;
+      sub.textContent = `Con ${inFlota.toLocaleString('es-CL')} buses y tarifa ${inTarifa.toLocaleString('es-CL',{maximumFractionDigits:3})} UF/bus/mes`;
       document.getElementById('obj-in-plazo').value = r;
     } else { okSolve=false; val.textContent='>120 meses'; sub.textContent='No factible con esta flota y tarifa'; }
   } else { // tarifa
@@ -2208,17 +2212,17 @@ function updateObjetivo() {
     const r = solveTarifa(inFlota, inPlazo, vanObj, v);
     if (r !== null) {
       solTarifa = r;
-      val.textContent = '$' + r.toLocaleString('es-CL') + ' /bus/día';
-      sub.textContent = `Con ${inFlota.toLocaleString('es-CL')} buses y ${inPlazo} meses · ${(r*30/40000).toFixed(3)} UF/bus/mes`;
+      val.textContent = r.toLocaleString('es-CL',{maximumFractionDigits:3}) + ' UF/bus/mes';
+      sub.textContent = `Con ${inFlota.toLocaleString('es-CL')} buses y ${inPlazo} meses · ≈ $${Math.round(r*40000).toLocaleString('es-CL')}/bus/mes`;
       document.getElementById('obj-in-tarifa').value = r;
     } else { okSolve=false; val.textContent='No alcanzable'; sub.textContent='Ni con tarifa muy alta se logra el VAN'; }
   }
 
   // Métricas del punto solución
-  document.getElementById('obj-rc-tarifa').textContent = '$' + Math.round(solTarifa).toLocaleString('es-CL');
+  document.getElementById('obj-rc-tarifa').textContent = solTarifa.toLocaleString('es-CL',{maximumFractionDigits:3}) + ' UF';
   if (okSolve) {
     const vanSol = calcVANobj(solFlota, solPlazo, solTarifa, v);
-    const ingresoSol = solFlota * solTarifa * v.dias;
+    const ingresoSol = solFlota * solTarifa * 40000;
     const margenSol = ingresoSol>0 ? (ingresoSol - v.opex) / ingresoSol : 0;
     document.getElementById('obj-rc-van').textContent = fmtCLP(vanSol, true);
     document.getElementById('obj-rc-van').style.color = vanSol >= vanObj ? 'var(--accent)' : 'var(--red)';
@@ -2228,7 +2232,7 @@ function updateObjetivo() {
     const cls = vanSol < vanObj * 0.95 ? 'no' : (vanSol < vanObj ? 'warn' : 'ok');
     const icon = cls==='ok' ? '✓' : (cls==='warn' ? '△' : '✗');
     let msg;
-    if (cls === 'ok') msg = `Con <strong>${solFlota.toLocaleString('es-CL')} buses × ${solPlazo} meses × $${Math.round(solTarifa).toLocaleString('es-CL')}/día</strong> alcanzas un VAN de <strong>${fmtCLP(vanSol, true)}</strong>, cumpliendo el objetivo.`;
+    if (cls === 'ok') msg = `Con <strong>${solFlota.toLocaleString('es-CL')} buses × ${solPlazo} meses × ${solTarifa.toLocaleString('es-CL',{maximumFractionDigits:3})} UF/bus/mes</strong> alcanzas un VAN de <strong>${fmtCLP(vanSol, true)}</strong>, cumpliendo el objetivo.`;
     else if (cls === 'warn') msg = `Muy cerca: VAN de ${fmtCLP(vanSol, true)} vs objetivo ${fmtCLP(vanObj, true)}.`;
     else msg = `No factible con esta configuración. Ajusta las otras variables.`;
     document.getElementById('obj-status-box').innerHTML = `<div class="obj-status ${cls}"><span class="obj-status-icon">${icon}</span><span>${msg}</span></div>`;
@@ -2341,7 +2345,7 @@ function buildObjChart(vanObj, v, solFlota, solPlazo) {
   document.getElementById('obj-strip-factibles').textContent = feasPts.length + '/' + gridPoints.length + ' (' + pct + '%)';
   document.getElementById('obj-strip-flotamin').textContent = minFeasFlota !== null ? minFeasFlota + ' buses' : 'N/A';
   document.getElementById('obj-strip-plazomin').textContent = minFeasPlazo !== null ? minFeasPlazo + ' meses' : 'N/A';
-  document.getElementById('obj-chart-sub').textContent = `Tarifa: $${v.tarifa.toLocaleString('es-CL')}/día · Objetivo: $${document.getElementById('sl-van-objetivo').value}M · OPEX: ${fmtCLP(v.opex, true)}/mes`;
+  document.getElementById('obj-chart-sub').textContent = `Tarifa: ${v.tarifa.toLocaleString('es-CL',{maximumFractionDigits:3})} UF/bus/mes · Objetivo: $${document.getElementById('sl-van-objetivo').value}M · OPEX: ${fmtCLP(v.opex, true)}/mes`;
 
   const opts = {
     responsive: true,
@@ -2405,8 +2409,8 @@ setObjMode('plazo');
 // ══════════════════════════════════════════════
 // PERSISTENCIA (localStorage) — conserva inputs al recargar
 // ══════════════════════════════════════════════
-const LS_STATE='fluxus_eval_state_v2';
-const LS_SCEN='fluxus_eval_scenarios_v2';
+const LS_STATE='fluxus_eval_state_v3'; // v3: tarifa en UF/mes (antes CLP/día)
+const LS_SCEN='fluxus_eval_scenarios_v3';
 function collectInputs(){
   const o={};
   document.querySelectorAll('input[id]').forEach(el=>{ o[el.id]=el.value; });
@@ -2478,7 +2482,7 @@ function renderScenarios(){
       '<td style="text-align:left;font-weight:600;color:var(--text2)">'+n+'</td>'+
       '<td>'+(k.flota!=null?Number(k.flota).toLocaleString('es-CL'):'—')+'</td>'+
       '<td>'+(k.plazo!=null?k.plazo+'m':'—')+'</td>'+
-      '<td>'+(k.tarifa!=null?'$'+Number(k.tarifa).toLocaleString('es-CL'):'—')+'</td>'+
+      '<td>'+(k.tarifa!=null?Number(k.tarifa).toLocaleString('es-CL',{maximumFractionDigits:3})+' UF':'—')+'</td>'+
       '<td>'+(k.capex||'—')+'</td>'+
       '<td>'+(k.opex||'—')+'</td>'+
       '<td>'+(k.van||'—')+'</td>'+
@@ -2534,7 +2538,7 @@ function exportPDF(){
   '<h2>Supuestos de operación</h2><table>'+
   row('Flota de buses',v.flota.toLocaleString('es-CL'))+
   row('Plazo del contrato',v.plazo+' meses')+
-  row('Tarifa por bus/día','$'+v.tarifa.toLocaleString('es-CL')+' ('+(v.tarifa*30/40000).toFixed(3)+' UF/bus/mes)')+
+  row('Tarifa por bus/mes',v.tarifa.toLocaleString('es-CL',{maximumFractionDigits:3})+' UF/bus/mes (≈ $'+Math.round(v.tarifa*40000).toLocaleString('es-CL')+'/bus/mes)')+
   row('Ramp-up de despliegue',v.ramp===0?'Inmediato':v.ramp+' meses')+
   row('Tasa de descuento',(v.tdescPct/10).toFixed(1)+'% / mes')+
   row('Crédito',v.pcred===0?'Sin crédito':v.pcred+' meses al '+v.icredPct+'%/año')+
