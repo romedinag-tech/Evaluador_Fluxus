@@ -4,24 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Evaluador Financiero — Fluxus Insight</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f0f6f9;--bg2:#ffffff;--bg3:#e8f2f7;--bg4:#d4e7ef;
-  --border:rgba(0,150,180,0.15);--border2:rgba(0,150,180,0.25);
-  --text:#0d2230;--text2:#3a6070;--text3:#7aa0b0;
-  --accent:#007fa3;--accent-dim:rgba(0,127,163,0.08);--accent-dim2:rgba(0,127,163,0.15);
-  --warn:#d95f00;--warn-dim:rgba(217,95,0,0.09);
-  --blue:#0077cc;--blue-dim:rgba(0,119,204,0.09);
-  --gold:#b07800;--gold-dim:rgba(176,120,0,0.09);
-  --red:#c0222e;--red-dim:rgba(192,34,46,0.08);
+  /* Paleta Fluxus: navy dominante, azul acento, naranja acento */
+  --bg:#F7F8FA;--bg2:#ffffff;--bg3:#eef2f7;--bg4:#dbe3ee;
+  --border:rgba(10,29,58,0.12);--border2:rgba(10,29,58,0.20);
+  --text:#0A1D3A;--text2:#4A5568;--text3:#94A3B8;
+  --accent:#2B7FD6;--accent-dim:rgba(43,127,214,0.09);--accent-dim2:rgba(43,127,214,0.16);
+  --warn:#F39200;--warn-dim:rgba(243,146,0,0.10);
+  --blue:#1B5FA8;--blue-dim:rgba(27,95,168,0.09);
+  --gold:#C77F00;--gold-dim:rgba(199,127,0,0.10);
+  --red:#C0222E;--red-dim:rgba(192,34,46,0.08);
+  --green:#1F9D6B;--green-dim:rgba(31,157,107,0.10);
   --purple:#5c3fa3;--purple-dim:rgba(92,63,163,0.09);
   --radius:12px;--radius-sm:8px;
-  --font:'Syne',sans-serif;--mono:'DM Mono',monospace;
+  --font:Calibri,'Segoe UI',system-ui,sans-serif;--mono:'DM Mono',monospace;--font-head:Georgia,'Times New Roman',serif;
 }
 html{font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px}
+h1,h2,h3,.sb-logo,.home-hero h2,.cx-grand .cg-v,.obj-intro-text h3,.mc-intro-text h3,.scenario-text h3{font-family:var(--font-head);letter-spacing:0}
 body{min-height:100vh;background:radial-gradient(ellipse 80% 50% at 20% -10%,rgba(0,127,163,0.06) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 110%,rgba(0,119,204,0.04) 0%,transparent 60%),var(--bg)}
 .page{max-width:1280px;margin:0 auto;padding:0 24px 80px}
 
@@ -32,7 +35,7 @@ header{padding:48px 0 40px;border-bottom:1px solid var(--border);margin-bottom:3
 h1{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.05;letter-spacing:-0.02em}
 h1 span{color:var(--accent)}
 .header-sub{margin-top:10px;font-size:14px;color:var(--text2);max-width:420px;line-height:1.6}
-.header-badge{display:flex;align-items:center;gap:8px;background:var(--accent-dim);border:1px solid rgba(127,255,178,0.2);border-radius:100px;padding:8px 16px;font-size:12px;color:var(--accent);font-weight:500;white-space:nowrap}
+.header-badge{display:flex;align-items:center;gap:8px;background:var(--accent-dim);border:1px solid rgba(43,127,214,0.22);border-radius:100px;padding:8px 16px;font-size:12px;color:var(--accent);font-weight:500;white-space:nowrap}
 .badge-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
 
@@ -90,7 +93,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);box-shadow:0 
 .tab-group{display:flex;gap:4px}
 .tab-btn{font-family:var(--font);font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all 0.15s;letter-spacing:0.05em}
 .tab-btn:hover{color:var(--text2);background:var(--bg3)}
-.tab-btn.active{background:var(--accent-dim2);color:var(--accent);border-color:rgba(127,255,178,0.25)}
+.tab-btn.active{background:var(--accent-dim2);color:var(--accent);border-color:rgba(43,127,214,0.25)}
 .chart-legend{padding:12px 20px 0;display:flex;gap:20px;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
 .leg-dot{width:20px;height:2px;border-radius:1px}
@@ -117,9 +120,9 @@ tbody td:first-child{text-align:left;color:var(--text3)}
 .scenario-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
 .scenario-title{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
 .scenario-result{padding:14px 16px;border-radius:var(--radius-sm);margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
-.scenario-result.viable{background:var(--accent-dim);border:1px solid rgba(127,255,178,0.15)}
-.scenario-result.marginal{background:var(--gold-dim);border:1px solid rgba(255,209,102,0.15)}
-.scenario-result.inviable{background:var(--red-dim);border:1px solid rgba(255,94,94,0.15)}
+.scenario-result.viable{background:var(--accent-dim);border:1px solid rgba(31,157,107,0.18)}
+.scenario-result.marginal{background:var(--gold-dim);border:1px solid rgba(243,146,0,0.16)}
+.scenario-result.inviable{background:var(--red-dim);border:1px solid rgba(192,34,46,0.16)}
 .scenario-icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .scenario-text h3{font-size:14px;font-weight:700;margin-bottom:4px}
 .scenario-result.viable .scenario-text h3{color:var(--accent)}
@@ -193,7 +196,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 
 
 /* ══ OBJETIVO v2 ══ */
-.obj-intro{background:rgba(255,209,102,0.07);border:1px solid rgba(255,209,102,0.2);border-radius:var(--radius);padding:20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start}
+.obj-intro{background:rgba(243,146,0,0.07);border:1px solid rgba(243,146,0,0.20);border-radius:var(--radius);padding:20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start}
 .obj-intro-icon{font-size:24px;flex-shrink:0}
 .obj-intro-text h3{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px}
 .obj-intro-text p{font-size:12px;color:var(--text2);line-height:1.6}
@@ -208,7 +211,7 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 .obj-mode-row{display:flex;gap:6px;margin-bottom:14px}
 .obj-mode-btn{flex:1;padding:8px 6px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:var(--font);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;line-height:1.3}
 .obj-mode-btn:hover{color:var(--text2);background:var(--bg3)}
-.obj-mode-btn.active{background:var(--gold-dim);color:var(--gold);border-color:rgba(255,209,102,0.35)}
+.obj-mode-btn.active{background:var(--gold-dim);color:var(--gold);border-color:rgba(243,146,0,0.32)}
 .obj-input-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:6px}
 .obj-computed{background:var(--bg3);border-radius:7px;padding:12px 14px;border:1px solid var(--border);margin-top:10px}
 .obj-computed-label{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
@@ -220,9 +223,9 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 .obj-rc-val{font-family:var(--mono);font-size:16px;font-weight:500}
 .obj-rc-sub{font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:2px}
 .obj-status{padding:12px 14px;border-radius:7px;display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-size:12px;line-height:1.5}
-.obj-status.ok{background:var(--accent-dim);border:1px solid rgba(127,255,178,0.15);color:var(--text2)}
-.obj-status.warn{background:var(--gold-dim);border:1px solid rgba(255,209,102,0.2);color:var(--text2)}
-.obj-status.no{background:var(--red-dim);border:1px solid rgba(255,94,94,0.15);color:var(--text2)}
+.obj-status.ok{background:var(--accent-dim);border:1px solid rgba(31,157,107,0.18);color:var(--text2)}
+.obj-status.warn{background:var(--gold-dim);border:1px solid rgba(243,146,0,0.20);color:var(--text2)}
+.obj-status.no{background:var(--red-dim);border:1px solid rgba(192,34,46,0.16);color:var(--text2)}
 .obj-status-icon{font-size:16px;flex-shrink:0;margin-top:1px}
 .obj-chart-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
 .obj-chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:8px}
@@ -395,8 +398,8 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
 .obj-solve-field label{flex:1;font-size:12px;font-weight:600;color:var(--text2)}
 .obj-solve-field input{width:100px;font-family:var(--mono);font-size:14px;font-weight:600;text-align:right;padding:6px 9px;border:1px solid var(--border2);border-radius:6px;background:var(--bg2);color:var(--text);outline:none}
 .obj-solve-field input:focus{border-color:var(--gold)}
-.obj-solve-field input:disabled{background:var(--gold-dim);color:var(--gold);border-color:rgba(255,209,102,0.4);font-weight:800;cursor:not-allowed}
-.obj-solve-field.solving{border-color:rgba(255,209,102,0.5);background:var(--gold-dim)}
+.obj-solve-field input:disabled{background:var(--gold-dim);color:var(--gold);border-color:rgba(243,146,0,0.38);font-weight:800;cursor:not-allowed}
+.obj-solve-field.solving{border-color:rgba(243,146,0,0.45);background:var(--gold-dim)}
 .obj-solve-tag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);min-width:54px;text-align:right}
 
 </style>
@@ -794,6 +797,27 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
     <p class="cx-note">Los indicadores usan la tarifa y parámetros financieros definidos en el Evaluador. Ajusta ahí los supuestos de ingreso.</p>
   </div>
+
+  <!-- Escenarios + Export -->
+  <div class="cx-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px">
+      <h3 style="margin-bottom:0">Escenarios y exportación</h3>
+      <button onclick="exportPDF()" style="display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em">
+        <span style="font-size:15px">🖨️</span> Exportar PDF
+      </button>
+    </div>
+    <p class="cx-sub">Guarda configuraciones con nombre para comparar (flota, plazo, tarifa, CAPEX, OPEX y resultados). Todo se guarda en este navegador; los inputs además se conservan al recargar.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <input id="scn-name" placeholder="Nombre del escenario (ej: Base 100 buses)" class="cx-in" style="flex:1;min-width:200px;text-align:left;font-family:var(--font);width:auto">
+      <button onclick="saveScenario()" style="padding:9px 16px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer">💾 Guardar escenario</button>
+    </div>
+    <div class="table-wrap">
+      <table class="cx-table" id="scn-table">
+        <thead><tr><th>Escenario</th><th>Flota</th><th>Plazo</th><th>Tarifa</th><th>CAPEX</th><th>OPEX/mes</th><th>VAN</th><th>TIR</th><th>Payback</th><th></th></tr></thead>
+        <tbody id="scn-tbody"><tr><td colspan="10" style="text-align:center;color:var(--text3);padding:14px">Sin escenarios guardados aún.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- ══ EVALUADOR ══════════════════════════════════════════ -->
@@ -825,24 +849,44 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
         <div class="slider-item">
           <div class="slider-top">
             <span class="slider-name">Plazo del contrato</span>
-            <span class="slider-val" id="v-plazo">24 meses</span>
+            <span style="display:flex;align-items:baseline;gap:5px">
+              <input type="number" id="inp-plazo" min="1" max="120" value="24"
+                style="width:60px;font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);text-align:right;border:none;border-bottom:1.5px solid var(--border2);background:transparent;outline:none;padding:2px 0"
+                oninput="onPlazoInput(this.value)">
+              <span style="font-size:12px;color:var(--text3)">meses</span>
+            </span>
           </div>
-          <input type="range" id="sl-plazo" min="1" max="72" step="1" value="24">
-          <div class="slider-limits"><span>1m</span><span>72m</span></div>
+          <input type="range" id="sl-plazo" min="1" max="72" step="1" value="24" oninput="onPlazoSlider(this.value)">
+          <div class="slider-limits"><span>1m</span><span>72m (barra) · escribe hasta 120</span></div>
         </div>
 
         <div class="slider-item">
           <div class="slider-top">
             <span class="slider-name">Tarifa por bus / día</span>
-            <span class="slider-val" id="v-tarifa">$4.500</span>
+            <span style="display:flex;align-items:baseline;gap:4px">
+              <span style="font-size:13px;color:var(--text3)">$</span>
+              <input type="number" id="inp-tarifa" min="0" max="50000" step="100" value="4500"
+                style="width:84px;font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);text-align:right;border:none;border-bottom:1.5px solid var(--border2);background:transparent;outline:none;padding:2px 0"
+                oninput="onTarifaInput(this.value)">
+            </span>
           </div>
-          <input type="range" id="sl-tarifa" min="1000" max="15000" step="500" value="4500">
-          <div class="slider-limits"><span>$1.000</span><span>$15.000</span></div>
+          <input type="range" id="sl-tarifa" min="1000" max="15000" step="500" value="4500" oninput="onTarifaSlider(this.value)">
+          <div class="slider-limits"><span>$1.000</span><span>$15.000 (barra) · escribe hasta $50.000</span></div>
           <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:7px 10px;background:var(--bg3);border-radius:6px;border:1px solid var(--border)">
             <span style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">UF equivalente:</span>
             <span id="v-tarifa-uf" style="font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent)">0,11 UF/bus/día</span>
             <span style="font-size:10px;color:var(--text3)">(1 UF = $40.000)</span>
           </div>
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-top">
+            <span class="slider-name">Ramp-up de despliegue</span>
+            <span class="slider-val" id="v-ramp">0 meses</span>
+          </div>
+          <input type="range" id="sl-ramp" min="0" max="24" step="1" value="0">
+          <div class="slider-limits"><span>Inmediato</span><span>24m</span></div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:5px">Meses hasta operar la flota completa. El ingreso escala linealmente durante el despliegue.</div>
         </div>
 
         <div class="section-sep">Costos</div>
@@ -994,6 +1038,17 @@ footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--border);displ
           </div>
           <div class="mc-range-labels"><span>optimista ($)</span><span>pesimista ($)</span></div>
           <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">Sugerido ±15% del OPEX calculado · editable</div>
+        </div>
+
+        <div class="mc-var-item">
+          <div class="mc-var-header"><span class="mc-var-name">OPEX imprevistos (% extra)</span><span class="mc-var-type">Uniforme</span></div>
+          <div class="mc-range-row">
+            <input class="mc-range-input" id="mc-cont-min" type="number" value="10" min="0" max="200" step="5">
+            <span class="mc-range-sep">→</span>
+            <input class="mc-range-input" id="mc-cont-max" type="number" value="100" min="0" max="300" step="5">
+          </div>
+          <div class="mc-range-labels"><span>mínimo (% del OPEX)</span><span>máximo (% del OPEX)</span></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono)">Costo operativo extra por imprevistos. Se suma un % aleatorio del OPEX del proyecto en cada escenario. Rango 10%–100% por defecto, editable.</div>
         </div>
 
         <div class="mc-var-item">
@@ -1664,8 +1719,10 @@ document.getElementById('cx-flota-local').addEventListener('input',()=>{
 document.getElementById('op-swb-pu').addEventListener('input',()=>{ recalcOpex(); pushToEvaluador(); if(typeof update==='function')update(); });
 
 window.addEventListener('load',()=>{
-  // primer pase inmediato
+  // restaura inputs guardados antes del primer cálculo
+  restoreState();
   recalcAll();
+  renderScenarios();
   navTo('home');
   // segundo pase: garantiza que todos los inputs HTML estén pintados con su value
   setTimeout(()=>{ recalcAll(); }, 100);
@@ -1680,17 +1737,44 @@ function getVals(){
   // flota: preferir inp-flota (editable local) si existe, sino sl-flota
   const _inpF=document.getElementById('inp-flota');
   const _flotaVal=_inpF?Math.max(1,Math.min(2000,parseInt(_inpF.value)||1)):+document.getElementById('sl-flota').value;
+  // plazo y tarifa: preferir el input numérico (permite superar el tope de la barra)
+  const _inpP=document.getElementById('inp-plazo');
+  const _plazoVal=_inpP?Math.max(1,Math.min(120,parseInt(_inpP.value)||1)):+document.getElementById('sl-plazo').value;
+  const _inpT=document.getElementById('inp-tarifa');
+  const _tarifaVal=_inpT?Math.max(0,Math.min(50000,parseInt(_inpT.value)||0)):+document.getElementById('sl-tarifa').value;
+  const _slRamp=document.getElementById('sl-ramp');
   return{
     flota:_flotaVal,
-    plazo:+document.getElementById('sl-plazo').value,
-    tarifa:+document.getElementById('sl-tarifa').value,
+    plazo:_plazoVal,
+    tarifa:_tarifaVal,
     dias:30,
+    ramp:_slRamp?+_slRamp.value:0,
     opex:+document.getElementById('sl-opex').value,
     capexBus:+document.getElementById('sl-capexbus').value,
     tdescPct:+document.getElementById('sl-tdesc').value,
     pcred:+document.getElementById('sl-pcred').value,
     icredPct:+document.getElementById('sl-icred').value,
   };
+}
+
+// ── Sincronización barra ⇄ input numérico (plazo y tarifa) ──
+function onPlazoInput(val){
+  const p=Math.max(1,Math.min(120,parseInt(val)||1));
+  const sl=document.getElementById('sl-plazo'); if(sl) sl.value=Math.min(p,+sl.max);
+  update();
+}
+function onPlazoSlider(val){
+  const inp=document.getElementById('inp-plazo'); if(inp) inp.value=+val;
+  update();
+}
+function onTarifaInput(val){
+  const t=Math.max(0,Math.min(50000,parseInt(val)||0));
+  const sl=document.getElementById('sl-tarifa'); if(sl) sl.value=Math.min(Math.max(t,+sl.min),+sl.max);
+  update();
+}
+function onTarifaSlider(val){
+  const inp=document.getElementById('inp-tarifa'); if(inp) inp.value=+val;
+  update();
 }
 
 function setTab(t){
@@ -1707,8 +1791,14 @@ function update(){
   if(_vFlota) _vFlota.textContent=v.flota+(v.flota<=5?' buses 🧪 piloto':' buses');
   const _inpFlotaDisp=document.getElementById('inp-flota');
   if(_inpFlotaDisp && document.activeElement!==_inpFlotaDisp) _inpFlotaDisp.value=v.flota;
-  document.getElementById('v-plazo').textContent=v.plazo+' meses';
-  document.getElementById('v-tarifa').textContent='$'+v.tarifa.toLocaleString('es-CL');
+  // Sincroniza input numérico y barra de plazo/tarifa sin pisar lo que el usuario escribe
+  const _inpPlazo=document.getElementById('inp-plazo');
+  if(_inpPlazo && document.activeElement!==_inpPlazo) _inpPlazo.value=v.plazo;
+  const _slPlazo=document.getElementById('sl-plazo'); if(_slPlazo) _slPlazo.value=Math.min(v.plazo,+_slPlazo.max);
+  const _inpTarifa=document.getElementById('inp-tarifa');
+  if(_inpTarifa && document.activeElement!==_inpTarifa) _inpTarifa.value=v.tarifa;
+  const _slTarifa=document.getElementById('sl-tarifa'); if(_slTarifa) _slTarifa.value=Math.min(Math.max(v.tarifa,+_slTarifa.min),+_slTarifa.max);
+  const _vRamp=document.getElementById('v-ramp'); if(_vRamp) _vRamp.textContent=(v.ramp===0?'Inmediato':v.ramp+' meses');
   document.getElementById('v-tarifa-uf').textContent=(v.tarifa*30/40000).toFixed(3)+' UF/bus/mes';
   document.getElementById('v-opex').textContent=fmtCLP(v.opex,true);
   document.getElementById('v-capexbus').textContent='$'+v.capexBus.toLocaleString('es-CL');
@@ -1726,8 +1816,10 @@ function update(){
   const margen=ingresoMes>0?flujoOpMes/ingresoMes:0;
   const useCred=v.pcred>0;
 
+  // Ramp-up: fracción de flota operativa en el mes i (despliegue lineal)
+  const rampFrac=i=> v.ramp>0?Math.min(1,i/v.ramp):1;
   const labels=['0'],flujosBase=[-capex],flujosCred=[useCred?0:-capex];
-  for(let i=1;i<=v.plazo;i++){labels.push(String(i));flujosBase.push(flujoOpMes);flujosCred.push(flujoOpMes-(i<=v.pcred?cuota:0));}
+  for(let i=1;i<=v.plazo;i++){const flujoOpI=ingresoMes*rampFrac(i)-v.opex;labels.push(String(i));flujosBase.push(flujoOpI);flujosCred.push(flujoOpI-(i<=v.pcred?cuota:0));}
   const flujosMain=useCred?flujosCred:flujosBase;
   const van=calcVAN(flujosMain,tDesc);
   const tir=calcTIR(flujosMain);
@@ -1762,17 +1854,17 @@ function update(){
   document.getElementById('mc-margen').className='metric-card '+(margen>0.3?'is-pos':margen>0?'is-warn':'is-neg');
 
   // Chart
-  const G='#7fffb2',O='#ffd166',R='#ff5e5e',B='#6ec6ff';
+  const G='#1F9D6B',O='#F39200',R='#C0222E',B='#2B7FD6';
   let ds=[],leg='';
   if(activeTab==='acum'){
-    ds.push({data:acumBase,type:'line',borderColor:G,backgroundColor:'rgba(127,255,178,0.05)',pointBackgroundColor:acumBase.map(v=>v>=0?G:R),pointRadius:3,tension:0.35,fill:true,order:2});
-    if(useCred)ds.push({data:acumCred,type:'line',borderColor:O,backgroundColor:'rgba(255,209,102,0.04)',borderDash:[5,3],pointBackgroundColor:O,pointRadius:3,tension:0.35,fill:true,order:1});
+    ds.push({data:acumBase,type:'line',borderColor:G,backgroundColor:'rgba(31,157,107,0.06)',pointBackgroundColor:acumBase.map(v=>v>=0?G:R),pointRadius:3,tension:0.35,fill:true,order:2});
+    if(useCred)ds.push({data:acumCred,type:'line',borderColor:O,backgroundColor:'rgba(243,146,0,0.05)',borderDash:[5,3],pointBackgroundColor:O,pointRadius:3,tension:0.35,fill:true,order:1});
     leg=`<span class="leg-item"><span class="leg-dot" style="background:${G}"></span>Sin crédito</span>`+(useCred?`<span class="leg-item"><span class="leg-dot dashed"></span>Con crédito</span>`:'');
   }else if(activeTab==='mens'){
-    ds.push({data:flujosMain,type:'bar',backgroundColor:flujosMain.map(f=>f>=0?'rgba(127,255,178,0.6)':'rgba(255,94,94,0.6)'),borderColor:flujosMain.map(f=>f>=0?G:R),borderWidth:1});
+    ds.push({data:flujosMain,type:'bar',backgroundColor:flujosMain.map(f=>f>=0?'rgba(31,157,107,0.55)':'rgba(192,34,46,0.5)'),borderColor:flujosMain.map(f=>f>=0?G:R),borderWidth:1});
     leg=`<span class="leg-item"><span class="leg-dot" style="background:${G}"></span>Positivo</span><span class="leg-item"><span class="leg-dot" style="background:${R}"></span>Negativo</span>`;
   }else{
-    ds.push({data:vanIncr,type:'line',borderColor:B,backgroundColor:'rgba(110,198,255,0.06)',pointBackgroundColor:vanIncr.map(v=>v>=0?B:R),pointRadius:3,tension:0.35,fill:true});
+    ds.push({data:vanIncr,type:'line',borderColor:B,backgroundColor:'rgba(43,127,214,0.06)',pointBackgroundColor:vanIncr.map(v=>v>=0?B:R),pointRadius:3,tension:0.35,fill:true});
     leg=`<span class="leg-item"><span class="leg-dot" style="background:${B}"></span>VAN acumulado</span>`;
   }
   document.getElementById('chart-legend').innerHTML=leg;
@@ -1784,7 +1876,7 @@ function update(){
   let rows='',cum=0;
   const mx=Math.min(v.plazo+1,25);
   for(let i=0;i<mx;i++){
-    const ing=i===0?0:ingresoMes;
+    const ing=i===0?0:ingresoMes*rampFrac(i);
     const eg=i===0?(useCred?0:capex)+v.opex:v.opex+(i<=v.pcred?cuota:0);
     const fl=flujosMain[i];cum+=fl;const pb=payback===i;
     rows+=`<tr${pb?' class="payback-row"':''}><td>${i}</td><td>${i===0?'—':fmtCLP(ing,true)}</td><td class="td-neg">${fmtCLP(-eg,true)}</td><td class="${fl>=0?'td-pos':'td-neg'}">${fmtCLP(fl,true)}</td><td class="${cum>=0?'td-pos':'td-neg'}">${fmtCLP(cum,true)}</td></tr>`;
@@ -1886,6 +1978,10 @@ function runMontecarlo(){
     const capexMax=+document.getElementById('mc-capex-max').value;
     const icredMin=+document.getElementById('mc-icred-min').value;
     const icredMax=+document.getElementById('mc-icred-max').value;
+    // OPEX imprevistos: % aleatorio (uniforme) del OPEX del proyecto, sumado como costo extra
+    const contMin=(+document.getElementById('mc-cont-min').value||0)/100;
+    const contMax=(+document.getElementById('mc-cont-max').value||0)/100;
+    const opexBase=v.opex; // OPEX del proyecto (variables del evaluador)
 
     const tMed=(tarifaMin+tarifaMax)/2, tStd=(tarifaMax-tarifaMin)/4;
     const oMed=(opexMin+opexMax)/2, oStd=(opexMax-opexMin)/4;
@@ -1897,9 +1993,11 @@ function runMontecarlo(){
       const flota=Math.round(clamp(randUniform(flotaMin,flotaMax),flotaMin,flotaMax));
       const tarifa=clamp(randNormal(tMed,tStd),tarifaMin,tarifaMax);
       const opex=clamp(randNormal(oMed,oStd),opexMin,opexMax);
+      const contingencia=opexBase*randUniform(contMin,contMax); // imprevistos sobre el OPEX del proyecto
+      const opexTotal=opex+contingencia;
       const capexBus=clamp(randNormal(cMed,cStd),capexMin,capexMax);
       const icredSim=clamp(randUniform(icredMin,icredMax),0,100);
-      vans.push(calcVANsim(flota,tarifa,opex,30,capexBus,v.plazo,tDesc,v.pcred,icredSim));
+      vans.push(calcVANsim(flota,tarifa,opexTotal,30,capexBus,v.plazo,tDesc,v.pcred,icredSim));
     }
 
     vans.sort((a,b)=>a-b);
@@ -1965,7 +2063,7 @@ function runMontecarlo(){
       type:'bar',
       data:{
         labels:edges.map(e=>fmtCLP(e,true)),
-        datasets:[{data:bins,backgroundColor:edges.map(e=>e>=0?'rgba(127,255,178,0.65)':'rgba(255,94,94,0.65)'),borderWidth:0,borderRadius:2}]
+        datasets:[{data:bins,backgroundColor:edges.map(e=>e>=0?'rgba(31,157,107,0.6)':'rgba(192,34,46,0.55)'),borderWidth:0,borderRadius:2}]
       },
       options:{
         responsive:true,maintainAspectRatio:false,
@@ -2303,6 +2401,162 @@ document.getElementById('sl-van-objetivo')?.addEventListener('input',updateObjet
 });
 // Estado inicial del solver (modo 'plazo' por defecto: resuelve plazo)
 setObjMode('plazo');
+
+// ══════════════════════════════════════════════
+// PERSISTENCIA (localStorage) — conserva inputs al recargar
+// ══════════════════════════════════════════════
+const LS_STATE='fluxus_eval_state_v2';
+const LS_SCEN='fluxus_eval_scenarios_v2';
+function collectInputs(){
+  const o={};
+  document.querySelectorAll('input[id]').forEach(el=>{ o[el.id]=el.value; });
+  return o;
+}
+function applyInputs(o){
+  if(!o) return;
+  Object.keys(o).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.tagName==='INPUT') el.value=o[id];
+  });
+}
+let _persistTO=null;
+function persistState(){
+  try{
+    clearTimeout(_persistTO);
+    _persistTO=setTimeout(()=>{ try{ localStorage.setItem(LS_STATE,JSON.stringify(collectInputs())); }catch(e){} },300);
+  }catch(e){}
+}
+function restoreState(){
+  try{ const raw=localStorage.getItem(LS_STATE); if(raw) applyInputs(JSON.parse(raw)); }catch(e){}
+}
+document.addEventListener('input',e=>{ if(e.target && e.target.id) persistState(); });
+
+// ══════════════════════════════════════════════
+// ESCENARIOS guardados (guardar / cargar / comparar)
+// ══════════════════════════════════════════════
+function loadScenarios(){ try{ return JSON.parse(localStorage.getItem(LS_SCEN)||'{}'); }catch(e){ return {}; } }
+function storeScenarios(o){ try{ localStorage.setItem(LS_SCEN,JSON.stringify(o)); }catch(e){} }
+function currentKPIs(){
+  if(typeof update==='function') update();
+  const g=id=>{const e=document.getElementById(id); return e?e.textContent:'—';};
+  const v=getVals();
+  return {
+    flota:v.flota, plazo:v.plazo, tarifa:v.tarifa,
+    capex:g('mv-capex'),
+    opex:fmtCLP(window.__OPEX_MES__||v.opex,true),
+    van:g('mv-van'), tir:g('mv-tir'), payback:g('mv-payback')
+  };
+}
+function saveScenario(){
+  const nameEl=document.getElementById('scn-name');
+  const name=(nameEl&&nameEl.value.trim())||('Escenario '+(Object.keys(loadScenarios()).length+1));
+  const scn=loadScenarios();
+  scn[name]={inputs:collectInputs(), kpis:currentKPIs(), ts:Date.now()};
+  storeScenarios(scn);
+  if(nameEl) nameEl.value='';
+  renderScenarios();
+}
+function deleteScenario(name){ const s=loadScenarios(); delete s[name]; storeScenarios(s); renderScenarios(); }
+function applyScenario(name){
+  const s=loadScenarios()[name];
+  if(!s) return;
+  applyInputs(s.inputs);
+  recalcAll();
+  persistState();
+  navTo('evaluador');
+}
+function renderScenarios(){
+  const tb=document.getElementById('scn-tbody');
+  if(!tb) return;
+  const s=loadScenarios();
+  const names=Object.keys(s);
+  if(names.length===0){ tb.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--text3);padding:14px">Sin escenarios guardados aún.</td></tr>'; return; }
+  tb.innerHTML=names.map(n=>{
+    const k=s[n].kpis||{};
+    const esc=n.replace(/'/g,"\\'");
+    return '<tr>'+
+      '<td style="text-align:left;font-weight:600;color:var(--text2)">'+n+'</td>'+
+      '<td>'+(k.flota!=null?Number(k.flota).toLocaleString('es-CL'):'—')+'</td>'+
+      '<td>'+(k.plazo!=null?k.plazo+'m':'—')+'</td>'+
+      '<td>'+(k.tarifa!=null?'$'+Number(k.tarifa).toLocaleString('es-CL'):'—')+'</td>'+
+      '<td>'+(k.capex||'—')+'</td>'+
+      '<td>'+(k.opex||'—')+'</td>'+
+      '<td>'+(k.van||'—')+'</td>'+
+      '<td>'+(k.tir||'—')+'</td>'+
+      '<td>'+(k.payback||'—')+'</td>'+
+      '<td style="white-space:nowrap"><button onclick="applyScenario(\''+esc+'\')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--accent);background:var(--accent-dim);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px">Cargar</button>'+
+      '<button onclick="deleteScenario(\''+esc+'\')" style="padding:5px 9px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--red);font-size:11px;font-weight:700;cursor:pointer">✕</button></td>'+
+    '</tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// EXPORTAR PDF — ventana de impresión con resumen de marca Fluxus
+// ══════════════════════════════════════════════
+function exportPDF(){
+  if(typeof update==='function') update();
+  const g=id=>{const e=document.getElementById(id); return e?e.textContent:'—';};
+  const v=getVals();
+  const P=window.__CAPEX_PARTS__||{};
+  const capexTot=fmtCLP(window.__CAPEX_TOTAL__||0,false);
+  const capexBus=fmtCLP(window.__CAPEX_BUS__||0,false);
+  const opexMes=fmtCLP(window.__OPEX_MES__||v.opex,false);
+  const kit=fmtCLP(window.__COSTO_KIT__||0,false);
+  const dias=window.__CAPEX_DIAS__||'—';
+  const prob=(typeof estimaProbMC==='function')?estimaProbMC():null;
+  const fecha=new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
+  const w=window.open('','_blank');
+  if(!w){ alert('Permite las ventanas emergentes para exportar el PDF.'); return; }
+  const row=(k,val)=>'<tr><td>'+k+'</td><td style="text-align:right;font-family:monospace">'+val+'</td></tr>';
+  const html='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Fluxus — Evaluación financiera</title>'+
+  '<style>*{box-sizing:border-box;margin:0;padding:0}'+
+  'body{font-family:Georgia,serif;color:#0A1D3A;padding:40px 48px;font-size:13px;line-height:1.5}'+
+  '.head{border-bottom:3px solid #2B7FD6;padding-bottom:16px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end}'+
+  '.brand{font-size:26px;font-weight:bold}.brand span{color:#2B7FD6}'+
+  '.sub{font-size:11px;color:#4A5568;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}'+
+  '.meta{font-size:11px;color:#4A5568;text-align:right;font-family:Calibri,sans-serif}'+
+  'h2{font-size:14px;color:#2B7FD6;margin:22px 0 8px;border-bottom:1px solid #dbe3ee;padding-bottom:5px}'+
+  'table{width:100%;border-collapse:collapse;margin-bottom:6px}'+
+  'td{padding:6px 4px;border-bottom:1px solid #eef2f7;font-family:Calibri,sans-serif}td:first-child{color:#4A5568}'+
+  '.kpis{display:flex;gap:12px;margin:10px 0 4px}'+
+  '.kpi{flex:1;border:1px solid #dbe3ee;border-radius:8px;padding:12px;text-align:center}'+
+  '.kpi .l{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#94A3B8}'+
+  '.kpi .x{font-size:20px;font-weight:bold;font-family:monospace;margin-top:4px}'+
+  '.foot{margin-top:30px;padding-top:12px;border-top:1px solid #dbe3ee;font-size:10px;color:#94A3B8;font-family:Calibri,sans-serif}'+
+  '@media print{body{padding:24px}}</style></head><body>'+
+  '<div class="head"><div><div class="brand">Flux<span>us</span></div><div class="sub">Evaluación financiera del proyecto</div></div>'+
+  '<div class="meta">Generado: '+fecha+'<br>Flota evaluada: '+v.flota.toLocaleString('es-CL')+' buses</div></div>'+
+  '<div class="kpis">'+
+  '<div class="kpi"><div class="l">VAN</div><div class="x">'+g('mv-van')+'</div></div>'+
+  '<div class="kpi"><div class="l">TIR</div><div class="x">'+g('mv-tir')+'</div></div>'+
+  '<div class="kpi"><div class="l">Payback</div><div class="x">'+g('mv-payback')+'</div></div>'+
+  '<div class="kpi"><div class="l">Prob. éxito</div><div class="x">'+(prob!=null?(prob*100).toFixed(0)+'%':'—')+'</div></div></div>'+
+  '<h2>Supuestos de operación</h2><table>'+
+  row('Flota de buses',v.flota.toLocaleString('es-CL'))+
+  row('Plazo del contrato',v.plazo+' meses')+
+  row('Tarifa por bus/día','$'+v.tarifa.toLocaleString('es-CL')+' ('+(v.tarifa*30/40000).toFixed(3)+' UF/bus/mes)')+
+  row('Ramp-up de despliegue',v.ramp===0?'Inmediato':v.ramp+' meses')+
+  row('Tasa de descuento',(v.tdescPct/10).toFixed(1)+'% / mes')+
+  row('Crédito',v.pcred===0?'Sin crédito':v.pcred+' meses al '+v.icredPct+'%/año')+
+  '</table><h2>CAPEX — inversión inicial</h2><table>'+
+  row('Costo kit / bus (neto)',kit)+
+  row('Subtotal por-bus (× flota)',fmtCLP(P.subBus||0,false))+
+  row('Campaña de instalación',fmtCLP(P.subCamp||0,false))+
+  row('Días de campaña',dias+' días')+
+  row('CAPEX total',capexTot)+
+  row('CAPEX por bus',capexBus)+
+  '</table><h2>OPEX — costo operacional mensual</h2><table>'+
+  row('OPEX total / mes',opexMes)+
+  row('OPEX por bus / mes',fmtCLP((window.__OPEX_MES__||v.opex)/Math.max(1,v.flota),false))+
+  row('Ingreso mensual (flota completa)',g('mv-ingreso'))+
+  row('Flujo neto / mes (flota completa)',g('mv-flujo'))+
+  row('Margen operacional',g('mv-margen'))+
+  '</table><div class="foot">Fluxus Ingeniería · V&amp;R Ingeniería — Documento generado por el Evaluador Financiero Fluxus. Cifras netas sin IVA. Modelo referencial para evaluación de proyecto; no constituye oferta.</div>'+
+  '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},250);}<\/scr'+'ipt></body></html>';
+  w.document.write(html);
+  w.document.close();
+}
+
 </script>
 </body>
 </html>
